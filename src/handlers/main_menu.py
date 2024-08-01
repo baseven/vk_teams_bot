@@ -4,54 +4,109 @@ from src.states.state_machine import BotStateMachine
 inline_keyboard_buttons = [
     [{"text": "Отпуска", "callbackData": "vacations", "style": "primary"}],
     [{"text": "Справки", "callbackData": "certificates", "style": "primary"}]
-
 ]
+
+vacations_buttons = json.dumps([
+    [{"text": "Создать отпуск", "callbackData": "create_vacation"},
+     {"text": "Назад", "callbackData": "back"}]
+])
+
+certificates_buttons = json.dumps([
+    [{"text": "Получить справку", "callbackData": "get_certificate"},
+     {"text": "Назад", "callbackData": "back"}]
+])
 
 
 def start_cb(bot, event):
     user_id = event.from_chat
     state_machine = BotStateMachine.load_state(user_id)
-    bot.send_text(
+    if state_machine.last_message_id:
+        bot.delete_messages(chat_id=event.from_chat, msg_id=state_machine.last_message_id)
+    response = bot.send_text(
         chat_id=event.from_chat,
         text="Главное меню",
         inline_keyboard_markup=json.dumps(inline_keyboard_buttons)
     )
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.save_state()
+
+
+def handle_vacations(bot, state_machine, user_id):
+    state_machine.to_vacations()
+    state_machine.save_state()
+    response = bot.send_text(chat_id=user_id,
+                             text="Vacations Menu: Choose an option",
+                             inline_keyboard_markup=vacations_buttons)
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.save_state()
+
+
+def handle_create_vacation(bot, state_machine, user_id):
+    response = bot.send_text(chat_id=user_id, text="Ваш отпуск создан")
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.to_vacations()  # Переход в состояние vacations
+    state_machine.save_state()
+    response = bot.send_text(chat_id=user_id,
+                             text="Vacations Menu: Choose an option",
+                             inline_keyboard_markup=vacations_buttons)
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.save_state()
+
+
+def handle_certificates(bot, state_machine, user_id):
+    state_machine.to_certificates()
+    state_machine.save_state()
+    response = bot.send_text(chat_id=user_id,
+                             text="Certificates Menu: Choose an option",
+                             inline_keyboard_markup=certificates_buttons)
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.save_state()
+
+
+def handle_get_certificate(bot, state_machine, user_id):
+    response = bot.send_text(chat_id=user_id, text="Справка предоставлена")
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.to_certificates()  # Переход в состояние certificates
+    state_machine.save_state()
+    response = bot.send_text(chat_id=user_id,
+                             text="Certificates Menu: Choose an option",
+                             inline_keyboard_markup=certificates_buttons)
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.save_state()
+
+
+def handle_back(bot, state_machine, user_id):
+    state_machine.to_main_menu()
+    state_machine.save_state()
+    response = bot.send_text(chat_id=user_id,
+                             text="Главное меню",
+                             inline_keyboard_markup=json.dumps(inline_keyboard_buttons))
+    state_machine.last_message_id = response.json().get('msgId')
+    state_machine.save_state()
+
+
+callback_handlers = {
+    "vacations": handle_vacations,
+    "create_vacation": handle_create_vacation,
+    "certificates": handle_certificates,
+    "get_certificate": handle_get_certificate,
+    "back": handle_back
+}
 
 
 def buttons_answer_cb(bot, event):
     user_id = event.from_chat
     state_machine = BotStateMachine.load_state(user_id)
     callback_data = event.data['callbackData']
-    # Переходы между состояниями в зависимости от нажатой кнопки
-    if callback_data == "vacations":
-        state_machine.to_vacations()
-        state_machine.save_state()
-        bot.send_text(chat_id=user_id,
-                      text="Vacations Menu: Choose an option",
-                      inline_keyboard_markup=[
-                          [{"text": "Создать отпуск", "callbackData": "create_vacation"},
-                           {"text": "Назад", "callbackData": "back"}]
-                      ])
-    elif callback_data == "create_vacation":
-        bot.send_text(chat_id=user_id, text="Ваш отпуск создан")
-    elif callback_data == "certificates":
-        state_machine.to_certificates()
-        state_machine.save_state()
-        bot.send_text(chat_id=user_id,
-                      text="Certificates Menu: Choose an option",
-                      inline_keyboard_markup=[
-                          [{"text": "Получить справку", "callbackData": "get_certificate"},
-                           {"text": "Назад", "callbackData": "back"}]
-                      ])
-    elif callback_data == "get_certificate":
-        bot.send_text(chat_id=user_id, text="Справка предоставлена")
-    elif callback_data == "back":
-        state_machine.to_main_menu()
-        state_machine.save_state()
-        bot.send_text(chat_id=user_id,
-                      text="Главное меню",
-                      inline_keyboard_markup=inline_keyboard_buttons)
 
+    if state_machine.last_message_id:
+        bot.delete_messages(chat_id=user_id, msg_id=state_machine.last_message_id)
+
+    handler = callback_handlers.get(callback_data)
+    if handler:
+        handler(bot, state_machine, user_id)
+    else:
+        bot.send_text(chat_id=user_id, text="Неизвестная команда.")
 
 # def restart_cb()
 

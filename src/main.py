@@ -6,7 +6,6 @@ from src.handlers.main_menu import buttons_answer_cb, start_cb
 
 logging.basicConfig(level=logging.INFO)
 
-
 if __name__ == "__main__":
     bot = Bot(token=VK_BOT_TOKEN)
     bot.dispatcher.add_handler(StartCommandHandler(callback=start_cb))

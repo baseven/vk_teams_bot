@@ -16,7 +16,7 @@ class MongoService:
     def save_state(self, user_state: UserState) -> None:
         self.users_collection.update_one(
             {'user_id': user_state.user_id},
-            {'$set': {'state': user_state.state}},
+            {'$set': {'state': user_state.state, 'last_message_id': user_state.last_message_id}},
             upsert=True
         )
 
@@ -24,4 +24,5 @@ class MongoService:
         user_data: Optional[dict] = self.users_collection.find_one({'user_id': user_id})
         if user_data:
             state = user_data.get('state', 'main_menu')
-            return UserState(user_id=user_id, state=state)
+            last_message_id = user_data.get('last_message_id')
+            return UserState(user_id=user_id, state=state, last_message_id=last_message_id)

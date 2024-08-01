@@ -22,7 +22,7 @@ load_environment()
 
 # Получаем значения переменных окружения
 MONGO_URI = get_env_variable('MONGO_URI')
-MONGO_DB = get_env_variable('MONGO_DB', )
+MONGO_DB = get_env_variable('MONGO_DB')
 MONGO_COLLECTION = get_env_variable('MONGO_COLLECTION')
 
 REDIS_HOST = get_env_variable('REDIS_HOST')

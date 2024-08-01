@@ -15,9 +15,10 @@ class BotStateMachine:
         {'trigger': 'to_certificates', 'source': 'main_menu', 'dest': 'certificates'}
     ]
 
-    def __init__(self, user_id, initial_state='main_menu'):
+    def __init__(self, user_id, initial_state='main_menu', last_message_id=None):
         self.user_id = user_id
         self.state = initial_state  # Инициализация состояния
+        self.last_message_id = last_message_id  # Инициализация идентификатора последнего сообщения
         # Инициализация машины состояний
         self.machine = Machine(model=self,
                                states=BotStateMachine.states,
@@ -26,11 +27,11 @@ class BotStateMachine:
 
     def save_state(self):
         # Сохранение состояния в Redis и MongoDB через DatabaseService
-        user_state = UserState(user_id=self.user_id, state=self.state)
+        user_state = UserState(user_id=self.user_id, state=self.state, last_message_id=self.last_message_id)
         database_service.save_state(user_state)
 
     @classmethod
     def load_state(cls, user_id):
         # Загрузка состояния из Redis или MongoDB через DatabaseService
         user_state = database_service.load_state(user_id)
-        return cls(user_id, user_state.state)
+        return cls(user_id, user_state.state, user_state.last_message_id)
