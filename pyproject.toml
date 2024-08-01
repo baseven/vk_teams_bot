@@ -7,6 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+mailru-im-bot = "^0.0.21"
+python-dotenv = "^1.0.1"
+transitions = "^0.9.1"
+pymongo = "^4.8.0"
+pydantic = "^2.8.2"
+redis = "^5.0.8"
 
 
 [build-system]
