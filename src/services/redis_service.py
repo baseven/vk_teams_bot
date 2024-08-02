@@ -4,6 +4,7 @@ from config import REDIS_HOST, REDIS_PORT, REDIS_DB
 from models.user_state import UserState
 from typing import Optional, Union
 
+
 class RedisService:
     def __init__(self) -> None:
         self.redis_client: StrictRedis = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
