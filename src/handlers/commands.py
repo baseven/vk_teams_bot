@@ -1,5 +1,5 @@
 import logging
-from src.keyboards.main_menu import main_menu_keyboard_buttons
+from src.keyboards import main_menu_keyboard
 from src.states.state_machine import BotStateMachine
 
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ def start_cb(bot, event):
     response = bot.send_text(
         chat_id=event.from_chat,
         text="Главное меню",
-        inline_keyboard_markup=main_menu_keyboard_buttons
+        inline_keyboard_markup=main_menu_keyboard
     )
     logger.info(f"Response: {response.json()}")
     state_machine.last_message_id = response.json().get('msgId')

@@ -6,13 +6,21 @@ from models.user_state import UserState
 database_service = DatabaseService()
 
 
+# TODO:
+#  1) Передача DatabaseService в качестве зависимости через конструктор улучшает тестируемость,
+#  поскольку позволяет использовать заглушки или мок-объекты при тестировании.
+#  2) Использование констант для состояний и переходов:
 class BotStateMachine:
-    states = ['main_menu', 'vacations', 'certificates']
+    states = ['main_menu', 'annual_vacation', 'unpaid_vacation', 'limits_and_schedule', 'reschedule_vacation',
+              'cancel_vacation']
 
     transitions = [
-        {'trigger': 'to_vacations', 'source': 'main_menu', 'dest': 'vacations'},
+        {'trigger': 'to_annual_vacation', 'source': 'main_menu', 'dest': 'annual_vacation'},
+        {'trigger': 'to_unpaid_vacation', 'source': 'main_menu', 'dest': 'unpaid_vacation'},
+        {'trigger': 'to_limits_and_schedule', 'source': 'main_menu', 'dest': 'limits_and_schedule'},
+        {'trigger': 'to_reschedule_vacation', 'source': 'main_menu', 'dest': 'reschedule_vacation'},
+        {'trigger': 'to_cancel_vacation', 'source': 'main_menu', 'dest': 'cancel_vacation'},
         {'trigger': 'to_main_menu', 'source': '*', 'dest': 'main_menu'},
-        {'trigger': 'to_certificates', 'source': 'main_menu', 'dest': 'certificates'}
     ]
 
     def __init__(self, user_id, initial_state='main_menu', last_message_id=None):
