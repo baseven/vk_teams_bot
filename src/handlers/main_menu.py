@@ -2,6 +2,7 @@ import json
 from src.keyboards import main_menu_keyboard
 from src.states.state_machine import BotStateMachine
 from src.handlers.annual_vacation import handle_annual_vacation
+from src.handlers.limits_and_schedule import handle_view_limits_and_schedule
 
 
 def handle_vacation_action(bot, state_machine, user_id, event, message):
@@ -23,10 +24,6 @@ def handle_unpaid_vacation(bot, state_machine, user_id, event):
     handle_vacation_action(bot, state_machine, user_id, event, "Отпуск без оплаты оформлен")
 
 
-def handle_view_limits_schedule(bot, state_machine, user_id, event):
-    handle_vacation_action(bot, state_machine, user_id, event, "Лимиты и график отпусков просмотрены")
-
-
 def handle_reschedule_vacation(bot, state_machine, user_id, event):
     handle_vacation_action(bot, state_machine, user_id, event, "Отпуск перенесен")
 
@@ -39,7 +36,7 @@ def handle_cancel_vacation(bot, state_machine, user_id, event):
 main_menu_cb_handlers = {
     "annual_vacation_menu": handle_annual_vacation,
     "unpaid_vacation": handle_unpaid_vacation,
-    "view_limits_schedule": handle_view_limits_schedule,
+    "view_limits_and_schedule": handle_view_limits_and_schedule,
     "reschedule_vacation": handle_reschedule_vacation,
     "cancel_vacation": handle_cancel_vacation,
 }

@@ -18,7 +18,7 @@ class BotStateMachine:
         'main_menu',
         *annual_vacation_states,  # Подключение состояний для annual_vacation
         'unpaid_vacation',
-        'view_limits_schedule',
+        'view_limits_and_schedule',
         'reschedule_vacation',
         'cancel_vacation'
     ]
@@ -28,7 +28,7 @@ class BotStateMachine:
         {'trigger': 'to_main_menu', 'source': '*', 'dest': 'main_menu'},
         {'trigger': 'to_annual_vacation_menu', 'source': 'main_menu', 'dest': 'annual_vacation_menu'},
         {'trigger': 'to_unpaid_vacation', 'source': 'main_menu', 'dest': 'unpaid_vacation'},
-        {'trigger': 'to_view_limits_schedule', 'source': 'main_menu', 'dest': 'view_limits_schedule'},
+        {'trigger': 'to_view_limits_and_schedule', 'source': 'main_menu', 'dest': 'view_limits_and_schedule'},  # Переход в новое состояние
         {'trigger': 'to_reschedule_vacation', 'source': 'main_menu', 'dest': 'reschedule_vacation'},
         {'trigger': 'to_cancel_vacation', 'source': 'main_menu', 'dest': 'cancel_vacation'},
     ] + annual_vacation_transitions  # Добавление переходов для annual_vacation
