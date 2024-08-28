@@ -4,7 +4,7 @@ from bot.bot import Bot
 from bot.filter import Filter
 
 from bot.handler import BotButtonCommandHandler, StartCommandHandler, MessageHandler
-from src.handlers import start_cb, main_menu_cb, annual_vacation_cb, annual_vacation_message_cb
+from src.handlers import start_cb, main_menu_cb, annual_vacation_cb, annual_vacation_message_cb, reschedule_vacation_cb
 
 
 logging.basicConfig(level=logging.INFO)
@@ -15,6 +15,7 @@ if __name__ == "__main__":
     bot.dispatcher.add_handler(BotButtonCommandHandler(callback=main_menu_cb))
     bot.dispatcher.add_handler(BotButtonCommandHandler(callback=annual_vacation_cb))
     bot.dispatcher.add_handler(MessageHandler(callback=annual_vacation_message_cb))
+    bot.dispatcher.add_handler(BotButtonCommandHandler(callback=reschedule_vacation_cb))
     # bot.dispatcher.add_handler(MessageHandler(filters=Filter.text, callback=message_cb))
 
     bot.start_polling()
