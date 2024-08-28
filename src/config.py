@@ -1,26 +1,40 @@
 import os
+
 from dotenv import load_dotenv
 from typing import Optional
 
 
 def load_environment() -> None:
-    load_dotenv()  # Загружаем общие переменные из .env
+    """Load environment variables from .env files based on the project stage."""
+    # Load common variables from .env
+    load_dotenv()
     project_stage = os.getenv('PROJECT_STAGE', 'local')
     env_file = f'.env.{project_stage}'
-    load_dotenv(env_file)  # Загружаем переменные для конкретной среды
+    # Load environment-specific variables
+    load_dotenv(env_file)
 
 
 def get_env_variable(name: str, default: Optional[str] = None) -> Optional[str]:
+    """Retrieve an environment variable or raise an error if it is missing.
+
+    Args:
+        name (str): The name of the environment variable.
+        default (Optional[str]): The default value if the environment variable is not set.
+
+    Returns:
+        Optional[str]: The value of the environment variable.
+
+    Raises:
+        EnvironmentError: If the environment variable is not set and no default is provided.
+    """
     value = os.getenv(name, default)
     if value is None:
         raise EnvironmentError(f"Missing required environment variable: {name}")
     return value
 
 
-# Загрузка файла .env
 load_environment()
 
-# Получаем значения переменных окружения
 MONGO_URI = get_env_variable('MONGO_URI')
 MONGO_DB = get_env_variable('MONGO_DB')
 MONGO_COLLECTION = get_env_variable('MONGO_COLLECTION')
@@ -30,11 +44,3 @@ REDIS_PORT = get_env_variable('REDIS_PORT')
 REDIS_DB = get_env_variable('REDIS_DB')
 
 VK_BOT_TOKEN = get_env_variable('VK_BOT_TOKEN')
-
-print(f"MONGO_URI: {MONGO_URI}")
-print(f"MONGO_DB: {MONGO_DB}")
-print(f"MONGO_COLLECTION: {MONGO_COLLECTION}")
-print(f"REDIS_HOST: {REDIS_HOST}")
-print(f"REDIS_PORT: {REDIS_PORT}")
-print(f"REDIS_DB: {REDIS_DB}")
-print(f"VK_BOT_TOKEN: {VK_BOT_TOKEN}")
