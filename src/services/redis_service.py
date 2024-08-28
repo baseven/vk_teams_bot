@@ -13,7 +13,9 @@ class RedisService:
         # Использование hset для установки значений в хэш
         self.redis_client.hset(user_state.user_id, mapping={
             "state": user_state.state or 'main_menu',
-            "last_message_id": user_state.last_message_id or ''
+            "last_message_id": user_state.last_message_id or '',
+            "start_date": user_state.start_date or '',
+            "end_date": user_state.end_date or '',
         })
 
     def load_state(self, user_id: str) -> Optional[UserState]:
@@ -21,4 +23,7 @@ class RedisService:
         if data:
             state = data.get(b'state', b'main_menu').decode('utf-8')
             last_message_id = data.get(b'last_message_id', b'').decode('utf-8')
-            return UserState(user_id=user_id, state=state, last_message_id=last_message_id)
+            start_date = data.get(b'start_date', b'').decode('utf-8')
+            end_date = data.get(b'end_date', b'').decode('utf-8')
+            return UserState(user_id=user_id, state=state, last_message_id=last_message_id, start_date=start_date,
+                             end_date=end_date)

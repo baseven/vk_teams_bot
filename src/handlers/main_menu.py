@@ -19,10 +19,6 @@ def handle_vacation_action(bot, state_machine, user_id, event, message):
     )
 
 
-def handle_annual_vacation_callback(bot, state_machine, user_id, event):
-    handle_annual_vacation(bot, state_machine, user_id, event)
-
-
 def handle_unpaid_vacation(bot, state_machine, user_id, event):
     handle_vacation_action(bot, state_machine, user_id, event, "Отпуск без оплаты оформлен")
 
@@ -40,8 +36,8 @@ def handle_cancel_vacation(bot, state_machine, user_id, event):
 
 
 # TODO: There is a relationship with callbackData in vacations_menu_buttons. This needs to be refactored.
-vacations_callback_handlers = {
-    "annual_vacation": handle_annual_vacation_callback,
+main_menu_cb_handlers = {
+    "annual_vacation_menu": handle_annual_vacation,
     "unpaid_vacation": handle_unpaid_vacation,
     "view_limits_schedule": handle_view_limits_schedule,
     "reschedule_vacation": handle_reschedule_vacation,
@@ -53,6 +49,6 @@ def main_menu_cb(bot, event):
     user_id = event.from_chat
     state_machine = BotStateMachine.load_state(user_id)
     callback_data = event.data.get('callbackData')
-    handler = vacations_callback_handlers.get(callback_data)
+    handler = main_menu_cb_handlers.get(callback_data)
     if handler:
         handler(bot, state_machine, user_id, event)
