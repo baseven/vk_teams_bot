@@ -3,8 +3,7 @@ from services.database_service import DatabaseService
 from models.user_state import UserState
 from src.states.annual_vacation import annual_vacation_states, annual_vacation_transitions
 from src.states.reschedule_vacation import reschedule_vacation_states, reschedule_vacation_transitions
-
-
+from src.states.cancel_vacation import cancel_vacation_states, cancel_vacation_transitions
 
 # Экземпляр DatabaseService для работы с базами данных
 database_service = DatabaseService()
@@ -22,18 +21,20 @@ class BotStateMachine:
         'unpaid_vacation',
         'view_limits_and_schedule',
         *reschedule_vacation_states,
-        'cancel_vacation'
+        *cancel_vacation_states
     ]
 
     # Определение переходов между состояниями
     transitions = [
-        {'trigger': 'to_main_menu', 'source': '*', 'dest': 'main_menu'},
-        {'trigger': 'to_annual_vacation_menu', 'source': 'main_menu', 'dest': 'annual_vacation_menu'},
-        {'trigger': 'to_unpaid_vacation', 'source': 'main_menu', 'dest': 'unpaid_vacation'},
-        {'trigger': 'to_view_limits_and_schedule', 'source': 'main_menu', 'dest': 'view_limits_and_schedule'},  # Переход в новое состояние
-        {'trigger': 'to_reschedule_vacation_menu', 'source': 'main_menu', 'dest': 'reschedule_vacation_menu'},
-        {'trigger': 'to_cancel_vacation', 'source': 'main_menu', 'dest': 'cancel_vacation'},
-    ] + annual_vacation_transitions + reschedule_vacation_transitions  # Добавление переходов для annual_vacation
+                      {'trigger': 'to_main_menu', 'source': '*', 'dest': 'main_menu'},
+                      {'trigger': 'to_annual_vacation_menu', 'source': 'main_menu', 'dest': 'annual_vacation_menu'},
+                      {'trigger': 'to_unpaid_vacation', 'source': 'main_menu', 'dest': 'unpaid_vacation'},
+                      {'trigger': 'to_view_limits_and_schedule', 'source': 'main_menu',
+                       'dest': 'view_limits_and_schedule'},  # Переход в новое состояние
+                      {'trigger': 'to_reschedule_vacation_menu', 'source': 'main_menu',
+                       'dest': 'reschedule_vacation_menu'},
+                      {'trigger': 'to_cancel_vacation_menu', 'source': 'main_menu', 'dest': 'cancel_vacation_menu'},
+                  ] + annual_vacation_transitions + reschedule_vacation_transitions + cancel_vacation_transitions  # Добавление переходов для annual_vacation
 
     def __init__(self, user_id, initial_state='main_menu', last_message_id=None, start_date=None, end_date=None):
         self.user_id = user_id

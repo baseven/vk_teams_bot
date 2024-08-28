@@ -4,6 +4,7 @@ from src.states.state_machine import BotStateMachine
 from src.handlers.annual_vacation import handle_annual_vacation
 from src.handlers.limits_and_schedule import handle_view_limits_and_schedule
 from src.handlers.reschedule_vacation import handle_reschedule_vacation
+from src.handlers.cancel_vacation import handle_cancel_vacation
 
 
 def handle_vacation_action(bot, state_machine, user_id, event, message):
@@ -23,10 +24,6 @@ def handle_vacation_action(bot, state_machine, user_id, event, message):
 
 def handle_unpaid_vacation(bot, state_machine, user_id, event):
     handle_vacation_action(bot, state_machine, user_id, event, "Отпуск без оплаты оформлен")
-
-
-def handle_cancel_vacation(bot, state_machine, user_id, event):
-    handle_vacation_action(bot, state_machine, user_id, event, "Отпуск отменен")
 
 
 # TODO: There is a relationship with callbackData in vacations_menu_buttons. This needs to be refactored.
