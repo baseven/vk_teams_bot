@@ -3,6 +3,8 @@ import logging
 from bot.event import EventType
 from src.keyboards import annual_vacation_buttons, confirm_period_keyboard, main_menu_keyboard, accept_period_keyboard
 from src.states.state_machine import BotStateMachine
+from src.data.vacation_limits import vacation_limits
+from src.data.vacation_schedule import vacation_schedule
 
 # Настройка логгера для модуля
 logger = logging.getLogger(__name__)
@@ -35,18 +37,12 @@ def handle_annual_vacation(bot, state_machine, user_id, event):
     logger.info(f"Saving state {state_machine.state}")
 
     # Здесь будет запрос к БД для получения доступных плановых периодов
-    planned_vacations = [
-        {"start_date": "01.01.2025", "end_date": "10.01.2025"},
-        {"start_date": "01.02.2025", "end_date": "10.02.2025"}
-    ]
-
     # Создание кнопок для плановых отпусков
-    planned_vacations_buttons = create_vacation_buttons(planned_vacations)
+    planned_vacations_buttons = create_vacation_buttons(vacation_schedule)
     annual_vacation_menu_keyboard = planned_vacations_buttons + annual_vacation_buttons
 
     # Здесь будет запрос к БД для получения доступных дней
-    available_days = 21
-    annual_vacation_text = ANNUAL_VACATION_TEXT_TEMPLATE.format(available_days=available_days)
+    annual_vacation_text = ANNUAL_VACATION_TEXT_TEMPLATE.format(available_days=vacation_limits.get("annual", 0))
 
     # Обновление сообщения с кнопками
     bot.edit_text(
@@ -121,13 +117,6 @@ def handle_accept_vacation(bot, state_machine, user_id, event):
     state_machine.set_vacation_dates(vacation_dates)
     state_machine.save_state()
     accept_vacation_text = f"Вы точно хотите оформить отпуск на {vacation_dates}?"
-
-    # bot.edit_text(
-    #     chat_id=user_id,
-    #     msg_id=state_machine.last_message_id,
-    #     text=accept_vacation_text,
-    #     inline_keyboard_markup=json.dumps(accept_period_keyboard)
-    # )
 
     bot.delete_messages(chat_id=user_id, msg_id=state_machine.last_message_id)
     response = bot.send_text(

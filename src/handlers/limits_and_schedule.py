@@ -25,7 +25,7 @@ def handle_view_limits_and_schedule(bot, state_machine, user_id, event):
     # Формируем текстовое сообщение с лимитами и графиком
     limits_text = f"Лимиты отпусков:\nЕжегодный: {user_limits['annual']} дней\nБез оплаты: {user_limits['unpaid']} дней\n"
     schedule_text = "График отпусков:\n" + "\n".join(
-        [f"Тип: {vacation['type']}, с {vacation['start']} по {vacation['end']}" for vacation in user_schedule]
+        [f"Тип: {vacation['type']}, с {vacation['start_date']} по {vacation['end_date']}" for vacation in user_schedule]
     )
 
     bot.edit_text(
