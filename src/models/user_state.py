@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from src.models.vacation import Vacation, Limit, VacationType  # Объединенный импорт моделей и типов
+from src.models.vacation import Vacation, Limit, VacationType, VacationStatus  # Объединенный импорт моделей и типов
 
 
 class UserState(BaseModel):

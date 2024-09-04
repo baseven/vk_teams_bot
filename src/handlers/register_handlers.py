@@ -1,5 +1,4 @@
 from bot.handler import BotButtonCommandHandler, StartCommandHandler, MessageHandler
-
 from src.handlers import (
     start_cb,
     main_menu_cb,
@@ -9,7 +8,7 @@ from src.handlers import (
     cancel_vacation_cb
 )
 
-# Dictionary of handlers: key is the handler class, value is a list of callback functions
+# Словарь обработчиков: ключ - класс обработчика, значение - список callback-функций
 HANDLERS = {
     StartCommandHandler: [start_cb],
     BotButtonCommandHandler: [
@@ -22,8 +21,12 @@ HANDLERS = {
 }
 
 
-def register_handlers(bot):
-    """Register all command and button handlers for the bot."""
+def register_handlers(bot) -> None:
+    """Регистрирует все команды и кнопочные обработчики для бота.
+
+    Args:
+        bot: Экземпляр бота.
+    """
     for handler_class, callbacks in HANDLERS.items():
         for callback in callbacks:
             bot.dispatcher.add_handler(handler_class(callback=callback))

@@ -1,12 +1,13 @@
 import json
 import logging
-from bot.event import EventType
-from src.keyboards import (main_menu_keyboard, reschedule_vacation_buttons, reschedule_vacation_keyboard,
-                           reschedule_accept_period_keyboard
-                           )
+from bot.event import Event, EventType  # Импорт Event и EventType для типизации
+from src.keyboards import (main_menu_keyboard, reschedule_vacation_buttons,
+                           reschedule_vacation_keyboard, reschedule_accept_period_keyboard)
 from src.states.state_machine import BotStateMachine
+from src.models.vacation import Vacation
 from src.data.vacation_limits import vacation_limits
 from src.data.vacation_schedule import vacation_schedule
+from src.utils import create_vacation_buttons  # Импортируем функцию из utils.py
 
 logger = logging.getLogger(__name__)
 
@@ -18,50 +19,60 @@ PLANNED_VACATION_TEXT_TEMPLATE = (
 )
 
 
-def create_vacation_buttons(planned_vacations):
-    """Создает кнопки для плановых отпусков."""
-    return [
-        [{
-            "text": f"{vacation['start_date']} - {vacation['end_date']}",
-            "callbackData": f"{PLANNED_VACATION_CALLBACK}_{vacation['start_date']} - {vacation['end_date']}",
-            "style": PRIMARY_STYLE
-        }]
-        for vacation in planned_vacations
-    ]
+def handle_reschedule_vacation(bot, state_machine, user_id: str, event: Event) -> None:
+    """Обрабатывает запрос на перенос отпуска.
 
+    Args:
+        bot: Экземпляр бота.
+        state_machine: Машина состояний для пользователя.
+        user_id (str): Идентификатор пользователя.
+        event (Event): Данные события.
+    """
+    logger.info(f"Starting reschedule vacation process for user {user_id}")
 
-def handle_reschedule_vacation(bot, state_machine, user_id, event):
-    logger.info(f"Starting annual vacation process for user {user_id}")
     state_machine.to_reschedule_vacation_menu()
     state_machine.save_state()
-    logger.info(f"Saving state {state_machine.state}")
+    logger.info(f"State saved: {state_machine.state}")
 
-    # Здесь будет запрос к БД для получения доступных плановых периодов
-    # Создание кнопок для плановых отпусков
-    planned_vacations_buttons = create_vacation_buttons(vacation_schedule)
+    # Используем общую функцию для создания кнопок
+    planned_vacations_buttons = create_vacation_buttons(
+        planned_vacations=vacation_schedule,
+        callback_prefix=PLANNED_VACATION_CALLBACK,
+        button_style=PRIMARY_STYLE
+    )
+
     reschedule_vacation_menu_keyboard = planned_vacations_buttons + reschedule_vacation_buttons
 
-    # Здесь будет запрос к БД для получения доступных дней
-    annual_vacation_text = PLANNED_VACATION_TEXT_TEMPLATE.format(available_days=vacation_limits.get("annual", 0))
+    available_days = vacation_limits.get("annual", 0)
+    reschedule_text = PLANNED_VACATION_TEXT_TEMPLATE.format(available_days=available_days)
 
-    # Обновление сообщения с кнопками
     bot.edit_text(
         chat_id=user_id,
         msg_id=state_machine.last_message_id,
-        text=annual_vacation_text,
+        text=reschedule_text,
         inline_keyboard_markup=json.dumps(reschedule_vacation_menu_keyboard)
     )
 
 
-confirm_period_TEXT_TEMPLATE = "изменить отпуск {period}?"
+confirm_period_TEXT_TEMPLATE = "Изменить отпуск {period}?"
 
 
-def handle_change_planned_vacation(bot, state_machine, user_id, event, vacation_dates):
-    logger.info(f" handle_planned_vacation for user {user_id}")
+def handle_change_planned_vacation(bot, state_machine, user_id: str, event: Event, vacation_dates: str) -> None:
+    """Обрабатывает изменение выбранного отпуска.
+
+    Args:
+        bot: Экземпляр бота.
+        state_machine: Машина состояний для пользователя.
+        user_id (str): Идентификатор пользователя.
+        event (Event): Данные события.
+        vacation_dates (str): Даты отпуска для изменения.
+    """
+    logger.info(f"Handling change planned vacation for user {user_id}")
+
     state_machine.to_reschedule_vacation_change_period()
     state_machine.set_vacation_dates(vacation_dates)
     state_machine.save_state()
-    logger.info(f"Saving state {state_machine.state}")
+    logger.info(f"State saved: {state_machine.state}")
 
     confirm_period_text = confirm_period_TEXT_TEMPLATE.format(period=vacation_dates)
     bot.edit_text(
@@ -72,11 +83,20 @@ def handle_change_planned_vacation(bot, state_machine, user_id, event, vacation_
     )
 
 
-def handle_change_vacation(bot, state_machine, user_id, event):
-    logger.info(f" handle_change_vacation for user {user_id}")
+def handle_change_vacation(bot, state_machine, user_id: str, event: Event) -> None:
+    """Обрабатывает изменение отпуска.
+
+    Args:
+        bot: Экземпляр бота.
+        state_machine: Машина состояний для пользователя.
+        user_id (str): Идентификатор пользователя.
+        event (Event): Данные события.
+    """
+    logger.info(f"Handling change vacation for user {user_id}")
+
     state_machine.to_reschedule_vacation_create_vacation()
     state_machine.save_state()
-    logger.info(f"Saving state {state_machine.state}")
+    logger.info(f"State saved: {state_machine.state}")
 
     create_vacation_text = "Введите период. Пожалуйста, укажите период в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ"
 
@@ -87,13 +107,22 @@ def handle_change_vacation(bot, state_machine, user_id, event):
     )
 
 
-def handle_confirm_change_vacation(bot, state_machine, user_id, event):
-    logger.info(f" handle_confirm_vacation for user {user_id}")
+def handle_confirm_change_vacation(bot, state_machine, user_id: str, event: Event) -> None:
+    """Обрабатывает подтверждение изменения отпуска.
+
+    Args:
+        bot: Экземпляр бота.
+        state_machine: Машина состояний для пользователя.
+        user_id (str): Идентификатор пользователя.
+        event (Event): Данные события.
+    """
+    logger.info(f"Handling confirm change vacation for user {user_id}")
+
     state_machine.to_main_menu()
     vacation_dates = state_machine.get_vacation_dates()
     state_machine.reset_vacation_dates()
     state_machine.save_state()
-    logger.info(f"Saving state {state_machine.state}")
+    logger.info(f"State saved: {state_machine.state}")
 
     confirm_vacation_text = f"Оформление ежегодного отпуска {vacation_dates} отправлено на согласование"
     bot.answer_callback_query(
@@ -106,7 +135,7 @@ def handle_confirm_change_vacation(bot, state_machine, user_id, event):
         chat_id=user_id,
         msg_id=state_machine.last_message_id,
         text="Главное меню",
-        inline_keyboard_markup=main_menu_keyboard
+        inline_keyboard_markup=json.dumps(main_menu_keyboard)
     )
 
 
@@ -116,8 +145,16 @@ reschedule_vacation_cb_handlers = {
 }
 
 
-def handle_reschedule_vacation_message(bot, state_machine, user_id, event):
-    logger.info(f" handle_accept_vacation for user {user_id}")
+def handle_reschedule_vacation_message(bot, state_machine, user_id: str, event: Event) -> None:
+    """Обрабатывает сообщение о переносе отпуска.
+
+    Args:
+        bot: Экземпляр бота.
+        state_machine: Машина состояний для пользователя.
+        user_id (str): Идентификатор пользователя.
+        event (Event): Данные события.
+    """
+    logger.info(f"Handling reschedule vacation message for user {user_id}")
 
     vacation_dates = event.data['text']
     state_machine.set_vacation_dates(vacation_dates)
@@ -135,27 +172,40 @@ def handle_reschedule_vacation_message(bot, state_machine, user_id, event):
     state_machine.save_state()
 
 
-def reschedule_vacation_message_cb(bot, event):
+def reschedule_vacation_message_cb(bot, event: Event) -> None:
+    """Обрабатывает обратные вызовы для сообщений о переносе отпуска.
+
+    Args:
+        bot: Экземпляр бота.
+        event (Event): Данные события.
+    """
     user_id = event.from_chat
     state_machine = BotStateMachine.load_state(user_id)
     logger.info(f"reschedule_vacation_message_cb for user: {user_id}, state: {state_machine.state}")
+
     if state_machine.state != "reschedule_vacation_create_vacation":
         logger.info(
-            f"reschedule_vacation_message_cb: state {state_machine.state} != reschedule_vacation_create_vacation")
+            f"State mismatch: {state_machine.state} != reschedule_vacation_create_vacation"
+        )
         return
-    logger.info(f"event.type == {event.type}")
+
     if event.type == EventType.NEW_MESSAGE:
-        logger.info(f"reschedule_vacation_message_cb: event.type == EventType.NEW_MESSAGE")
+        logger.info(f"Handling new message event for user {user_id}")
         handle_reschedule_vacation_message(bot, state_machine, user_id, event)
 
 
-def reschedule_vacation_cb(bot, event):
+def reschedule_vacation_cb(bot, event: Event) -> None:
+    """Обрабатывает обратные вызовы для переноса отпуска.
+
+    Args:
+        bot: Экземпляр бота.
+        event (Event): Данные события.
+    """
     user_id = event.from_chat
     state_machine = BotStateMachine.load_state(user_id)
     callback_data = event.data.get('callbackData')
-    # Проверка на префикс "planned_vacation"
+
     if callback_data.startswith(PLANNED_VACATION_CALLBACK):
-        # Извлечение даты отпуска из callbackData
         vacation_dates = callback_data[len(PLANNED_VACATION_CALLBACK) + 1:]  # +1 для учета "_"
         handler = handle_change_planned_vacation
 
