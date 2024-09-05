@@ -1,29 +1,55 @@
+from typing import Optional
+
 import redis
 from redis.client import StrictRedis
+
 from config import REDIS_HOST, REDIS_PORT, REDIS_DB
 from models.user_state import UserState
-from typing import Optional, Union
 
 
 class RedisService:
+    """
+    Service class to interact with Redis for managing user states.
+    """
+
     def __init__(self) -> None:
-        self.redis_client: StrictRedis = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+        """
+        Initializes the Redis client with the specified configuration.
+        """
+        self.redis_client: StrictRedis = redis.StrictRedis(
+            host=REDIS_HOST,
+            port=REDIS_PORT,
+            db=REDIS_DB
+        )
 
     def save_state(self, user_state: UserState) -> None:
-        # Использование hset для установки значений в хэш
-        self.redis_client.hset(user_state.user_id, mapping={
-            "state": user_state.state or 'main_menu',
-            "last_message_id": user_state.last_message_id or '',
-            "start_date": user_state.start_date or '',
-            "end_date": user_state.end_date or '',
-        })
+        """
+        Saves or updates a user's state in the Redis store.
 
-    def load_state(self, user_id: str) -> Optional[UserState]:
+        Args:
+            user_state (UserState): The user state to save or update.
+        """
+        self.redis_client.hset(user_state.user_id, mapping=user_state.model_dump())
+
+    def get_state(self, user_id: str) -> Optional[UserState]:
+        """
+        Retrieves a user's state from the Redis store.
+
+        Args:
+            user_id (str): The unique identifier of the user.
+
+        Returns:
+            Optional[UserState]: The retrieved user state, or None if not found.
+        """
         data = self.redis_client.hgetall(user_id)
         if data:
-            state = data.get(b'state', b'main_menu').decode('utf-8')
-            last_message_id = data.get(b'last_message_id', b'').decode('utf-8')
-            start_date = data.get(b'start_date', b'').decode('utf-8')
-            end_date = data.get(b'end_date', b'').decode('utf-8')
-            return UserState(user_id=user_id, state=state, last_message_id=last_message_id, start_date=start_date,
-                             end_date=end_date)
+            return UserState(**{key.decode('utf-8'): value.decode('utf-8') for key, value in data.items()})
+
+    def delete_state(self, user_id: str) -> None:
+        """
+        Deletes a user's state from the Redis store.
+
+        Args:
+            user_id (str): The unique identifier of the user.
+        """
+        self.redis_client.delete(user_id)

@@ -1,34 +1,58 @@
+from typing import Optional
+
 from pymongo import MongoClient
-from config import MONGO_URI, MONGO_DB, MONGO_COLLECTION
-from models.user_state import UserState
 from pymongo.collection import Collection
 from pymongo.database import Database
-from pymongo.mongo_client import MongoClient as MongoClientType
-from typing import Optional
+
+from config import MONGO_URI, MONGO_DB, MONGO_COLLECTION
+from models.user_state import UserState
 
 
 class MongoService:
+    """
+    Service class to interact with MongoDB for managing user states.
+    """
+
     def __init__(self) -> None:
-        self.mongo_client: MongoClientType = MongoClient(MONGO_URI)
+        """
+        Initializes the MongoDB client and selects the appropriate database and collection.
+        """
+        self.mongo_client: MongoClient = MongoClient(MONGO_URI)
         self.db: Database = self.mongo_client[MONGO_DB]
         self.users_collection: Collection = self.db[MONGO_COLLECTION]
 
     def save_state(self, user_state: UserState) -> None:
+        """
+        Saves or updates a user's state in the MongoDB collection.
+
+        Args:
+            user_state (UserState): The user state to save or update.
+        """
         self.users_collection.update_one(
             {'user_id': user_state.user_id},
-            {'$set': {'state': user_state.state,
-                      'last_message_id': user_state.last_message_id,
-                      'start_date': user_state.start_date,
-                      'end_date': user_state.end_date}},
+            {'$set': user_state.model_dump()},
             upsert=True
         )
 
-    def load_state(self, user_id: str) -> Optional[UserState]:
-        user_data: Optional[dict] = self.users_collection.find_one({'user_id': user_id})
+    def get_state(self, user_id: str) -> Optional[UserState]:
+        """
+        Retrieves a user's state from the MongoDB collection.
+
+        Args:
+            user_id (str): The unique identifier of the user.
+
+        Returns:
+            Optional[UserState]: The retrieved user state, or None if not found.
+        """
+        user_data = self.users_collection.find_one({'user_id': user_id})
         if user_data:
-            state = user_data.get('state', 'main_menu')
-            last_message_id = user_data.get('last_message_id')
-            start_date = user_data.get('start_date')
-            end_date = user_data.get('end_date')
-            return UserState(user_id=user_id, state=state, last_message_id=last_message_id, start_date=start_date,
-                             end_date=end_date)
+            return UserState(**user_data)
+
+    def delete_state(self, user_id: str) -> None:
+        """
+        Deletes a user's state from the MongoDB collection.
+
+        Args:
+            user_id (str): The unique identifier of the user.
+        """
+        self.users_collection.delete_one({'user_id': user_id})
