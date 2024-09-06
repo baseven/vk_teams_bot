@@ -123,7 +123,7 @@ def cancel_vacation_cb(bot, event: Event) -> None:
         event (Event): Данные события.
     """
     user_id = event.from_chat
-    state_machine = BotStateMachine.load_state(user_id)
+    state_machine = BotStateMachine.get_state(user_id)
     callback_data = event.data.get('callbackData')
 
     if callback_data.startswith(PLANNED_VACATION_CALLBACK):

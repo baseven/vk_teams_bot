@@ -157,7 +157,7 @@ annual_vacation_cb_handlers = {
 def annual_vacation_message_cb(bot, event: Event) -> None:
     """Обрабатывает входящие сообщения, связанные с ежегодными отпусками."""
     user_id = event.from_chat
-    state_machine = BotStateMachine.load_state(user_id)
+    state_machine = BotStateMachine.get_state(user_id)
     logger.info(f"annual_vacation_message_cb for user: {user_id}, state: {state_machine.state}")
 
     if state_machine.state != "annual_vacation_create_vacation":
@@ -173,7 +173,7 @@ def annual_vacation_message_cb(bot, event: Event) -> None:
 def annual_vacation_cb(bot, event: Event) -> None:
     """Обрабатывает обратные вызовы, связанные с ежегодными отпусками."""
     user_id = event.from_chat
-    state_machine = BotStateMachine.load_state(user_id)
+    state_machine = BotStateMachine.get_state(user_id)
     callback_data = event.data.get('callbackData')
 
     if callback_data.startswith(PLANNED_VACATION_CALLBACK):

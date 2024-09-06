@@ -17,7 +17,7 @@ def start_cb(bot, event: Event) -> None:
     user_id = event.from_chat
     logger.info(f"Received /start command from user {user_id}")
 
-    state_machine = BotStateMachine.load_state(user_id)
+    state_machine = BotStateMachine.get_state(user_id)
 
     response = bot.send_text(
         chat_id=user_id,

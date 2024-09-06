@@ -61,7 +61,7 @@ def main_menu_cb(bot, event: Event) -> None:
         event (Event): Данные события.
     """
     user_id = event.from_chat
-    state_machine = BotStateMachine.load_state(user_id)
+    state_machine = BotStateMachine.get_state(user_id)
     callback_data = event.data.get('callbackData')
     handler = main_menu_cb_handlers.get(callback_data)
     if handler:
