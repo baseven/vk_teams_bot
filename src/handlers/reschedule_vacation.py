@@ -3,7 +3,7 @@ import logging
 from bot.event import Event, EventType  # Импорт Event и EventType для типизации
 from src.keyboards import (main_menu_keyboard, reschedule_vacation_buttons,
                            reschedule_vacation_keyboard, reschedule_accept_period_keyboard)
-from src.states.state_machine import BotStateMachine
+from src.states.state_machine import UserStateMachine
 from src.models.vacation import Vacation
 from src.data.vacation_limits import vacation_limits
 from src.data.vacation_schedule import vacation_schedule
@@ -180,7 +180,7 @@ def reschedule_vacation_message_cb(bot, event: Event) -> None:
         event (Event): Данные события.
     """
     user_id = event.from_chat
-    state_machine = BotStateMachine.get_state(user_id)
+    state_machine = UserStateMachine.get_state(user_id)
     logger.info(f"reschedule_vacation_message_cb for user: {user_id}, state: {state_machine.state}")
 
     if state_machine.state != "reschedule_vacation_create_vacation":
@@ -202,7 +202,7 @@ def reschedule_vacation_cb(bot, event: Event) -> None:
         event (Event): Данные события.
     """
     user_id = event.from_chat
-    state_machine = BotStateMachine.get_state(user_id)
+    state_machine = UserStateMachine.get_state(user_id)
     callback_data = event.data.get('callbackData')
 
     if callback_data.startswith(PLANNED_VACATION_CALLBACK):

@@ -4,7 +4,7 @@ from typing import List
 from bot.event import Event, EventType  # Импорт Event
 from src.keyboards import (main_menu_keyboard, cancel_vacation_buttons,
                            cancel_vacation_keyboard, reschedule_accept_period_keyboard)
-from src.states.state_machine import BotStateMachine
+from src.states.state_machine import UserStateMachine
 from src.models.vacation import Vacation
 from src.data.vacation_schedule import vacation_schedule
 from src.utils import create_vacation_buttons  # Импортируем функцию из utils.py
@@ -123,7 +123,7 @@ def cancel_vacation_cb(bot, event: Event) -> None:
         event (Event): Данные события.
     """
     user_id = event.from_chat
-    state_machine = BotStateMachine.get_state(user_id)
+    state_machine = UserStateMachine.get_state(user_id)
     callback_data = event.data.get('callbackData')
 
     if callback_data.startswith(PLANNED_VACATION_CALLBACK):

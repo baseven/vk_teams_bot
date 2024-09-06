@@ -1,7 +1,7 @@
 import json
 from bot.event import Event  # Импорт Event для типизации
 from src.keyboards import main_menu_keyboard
-from src.states.state_machine import BotStateMachine
+from src.states.state_machine import UserStateMachine
 from src.handlers.annual_vacation import handle_annual_vacation
 from src.handlers.limits_and_schedule import handle_view_limits_and_schedule
 from src.handlers.reschedule_vacation import handle_reschedule_vacation
@@ -61,7 +61,7 @@ def main_menu_cb(bot, event: Event) -> None:
         event (Event): Данные события.
     """
     user_id = event.from_chat
-    state_machine = BotStateMachine.get_state(user_id)
+    state_machine = UserStateMachine.get_state(user_id)
     callback_data = event.data.get('callbackData')
     handler = main_menu_cb_handlers.get(callback_data)
     if handler:

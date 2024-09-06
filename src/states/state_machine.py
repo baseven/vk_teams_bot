@@ -45,7 +45,7 @@ TRANSITIONS = [
 ] + annual_vacation_transitions + reschedule_vacation_transitions + cancel_vacation_transitions
 
 
-class BotStateMachine:
+class UserStateMachine:
     """State machine for handling bot states and transitions."""
 
     def __init__(self, user_state: UserState, database_service: Optional[DatabaseService] = None):
@@ -73,7 +73,7 @@ class BotStateMachine:
         logger.info(f"State for user {self.user_state.user_id} saved: {self.user_state.state}")
 
     @classmethod
-    def get_state(cls, user_id: str, database_service: Optional[DatabaseService] = None) -> 'BotStateMachine':
+    def get_state(cls, user_id: str, database_service: Optional[DatabaseService] = None) -> 'UserStateMachine':
         """
         Get the user's state from the database, or create a new state if not found.
 
@@ -83,7 +83,7 @@ class BotStateMachine:
                                                           If None, a new instance of DatabaseService is created.
 
         Returns:
-            BotStateMachine: Instance of the state machine with loaded or newly initialized state.
+            UserStateMachine: Instance of the state machine with loaded or newly initialized state.
         """
         database_service = database_service or DatabaseService()
         user_state = database_service.get_user_state(user_id)
