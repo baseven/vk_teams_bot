@@ -22,12 +22,12 @@ class VacationStatus(str, Enum):
 
 
 class Vacation(BaseModel):
-    vacation_id: str = Field(..., description="Unique identifier for the vacation")
     vacation_type: VacationType = Field(..., description="Type of vacation (e.g., annual paid, unpaid, sick leave)")
     start_date: datetime = Field(..., description="Start date of the vacation")
     end_date: datetime = Field(..., description="End date of the vacation")
     status: VacationStatus = Field(...,
                                    description="Current status of the vacation (e.g., planned, approved, rejected)")
+    vacation_id: Optional[str] = Field(None, description="Unique identifier for the vacation")
     request_date: Optional[datetime] = Field(None, description="Date when the vacation was requested")
     comment: Optional[str] = Field(None, description="Additional comments or notes related to the vacation")
     available_days: Optional[int] = Field(None, description="Current number of available days for this type of leave")
