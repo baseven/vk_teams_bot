@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 from typing import Optional
 from datetime import datetime
 from enum import Enum
+from src.models import BaseModelConfig
 
 
 class VacationType(str, Enum):
@@ -21,7 +22,7 @@ class VacationStatus(str, Enum):
     COMPLETED = "completed"
 
 
-class Vacation(BaseModel):
+class Vacation(BaseModelConfig):
     vacation_type: VacationType = Field(..., description="Type of vacation (e.g., annual paid, unpaid, sick leave)")
     start_date: datetime = Field(..., description="Start date of the vacation")
     end_date: datetime = Field(..., description="End date of the vacation")
@@ -33,14 +34,7 @@ class Vacation(BaseModel):
     available_days: Optional[int] = Field(None, description="Current number of available days for this type of leave")
     approved_by: Optional[str] = Field(None, description="ID or name of the person who approved the vacation")
 
-    class Config:
-        use_enum_values = True
-        validate_assignment = True
 
-
-class Limit(BaseModel):
+class Limit(BaseModelConfig):
     vacation_type: VacationType = Field(..., description="Type of vacation (e.g., annual paid, unpaid, sick leave)")
     available_days: int = Field(..., description="Current number of available days for this type of vacation")
-
-    class Config:
-        validate_assignment = True
