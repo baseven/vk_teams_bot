@@ -37,7 +37,7 @@ load_environment()
 
 MONGO_URI = get_env_variable('MONGO_URI')
 MONGO_DB = get_env_variable('MONGO_DB')
-MONGO_COLLECTION = get_env_variable('MONGO_COLLECTION')
+MONGO_USER_STATE_COLLECTION = get_env_variable('MONGO_USER_STATE_COLLECTION')
 
 REDIS_HOST = get_env_variable('REDIS_HOST')
 REDIS_PORT = get_env_variable('REDIS_PORT')
