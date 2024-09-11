@@ -1,8 +1,8 @@
 from bot.handler import BotButtonCommandHandler, StartCommandHandler, MessageHandler
 from src.handlers import (
     start_cb,
-    main_menu_cb,
-    annual_vacation_cb,
+    main_menu_callback_dispatcher,
+    annual_vacation_callback_dispatcher,
     annual_vacation_message_cb,
     reschedule_vacation_cb,
     cancel_vacation_cb
@@ -12,8 +12,8 @@ from src.handlers import (
 HANDLERS = {
     StartCommandHandler: [start_cb],
     BotButtonCommandHandler: [
-        main_menu_cb,
-        annual_vacation_cb,
+        main_menu_callback_dispatcher,
+        annual_vacation_callback_dispatcher,
         reschedule_vacation_cb,
         cancel_vacation_cb
     ],
