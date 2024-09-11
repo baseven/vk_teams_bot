@@ -1,17 +1,18 @@
-# TODO: Реализовать динамическое формирование кнопок с датами и обработку случая, когда запланированных дней нет.
+from src.actions import AnnualVacationActions as Actions
+from src.styles import ButtonStyle
 
 annual_vacation_buttons = [
-    [{"text": "Другие даты", "callbackData": "create_new_vacation", "style": "primary"}],
-    [{"text": "Вернуться в главное меню", "callbackData": "back_to_main_menu", "style": "primary"}]
+    [{"text": Actions.CREATE_ANNUAL_VACATION.text, "callbackData": Actions.CREATE_ANNUAL_VACATION.value, "style": ButtonStyle.PRIMARY.value}],
+    [{"text": Actions.BACK_TO_MAIN_MENU.text, "callbackData": Actions.BACK_TO_MAIN_MENU.value, "style": ButtonStyle.PRIMARY.value}]
 ]
 
 confirm_period_keyboard = [
-    [{"text": "Оформить", "callbackData": "confirm_planned_vacation", "style": "primary"}],
-    [{"text": "Изменить", "callbackData": "create_new_vacation", "style": "primary"}],
-    [{"text": "Вернуться в главное меню", "callbackData": "back_to_main_menu", "style": "primary"}]
+    [{"text": Actions.CONFIRM_ANNUAL_VACATION.text, "callbackData": Actions.CONFIRM_ANNUAL_VACATION.value, "style": ButtonStyle.PRIMARY.value}],
+    [{"text": Actions.CREATE_ANNUAL_VACATION.text, "callbackData": Actions.CREATE_ANNUAL_VACATION.value, "style": ButtonStyle.PRIMARY.value}],
+    [{"text": Actions.BACK_TO_MAIN_MENU.text, "callbackData": Actions.BACK_TO_MAIN_MENU.value, "style": ButtonStyle.PRIMARY.value}]
 ]
 
 accept_period_keyboard = [
-    [{"text": "Оформить", "callbackData": "confirm_planned_vacation", "style": "primary"}],
-    [{"text": "Вернуться в главное меню", "callbackData": "back_to_main_menu", "style": "primary"}]
+    [{"text": Actions.CONFIRM_ANNUAL_VACATION.text, "callbackData": Actions.CONFIRM_ANNUAL_VACATION.value, "style": ButtonStyle.PRIMARY.value}],
+    [{"text": Actions.BACK_TO_MAIN_MENU.text, "callbackData": Actions.BACK_TO_MAIN_MENU.value, "style": ButtonStyle.PRIMARY.value}]
 ]
