@@ -110,3 +110,69 @@ class UserStateManager:
         else:
             logger.warning("No current vacation is set.")
             return None
+
+    def set_current_vacation(self, vacation_id: str) -> Optional[Vacation]:
+        """
+        Устанавливает текущий отпуск (current_vacation) по идентификатору отпуска (vacation_id)
+        и применяет текущий лимит отпуска.
+
+        Args:
+            vacation_id (str): Уникальный идентификатор отпуска.
+
+        Returns:
+            Optional[Vacation]: Найденный отпуск, или None, если отпуск не найден.
+        """
+        for vacation in self.user_state.vacations:
+            if vacation.vacation_id == vacation_id:
+                self.user_state.current_vacation = vacation
+                self._set_current_limit(vacation.vacation_type)
+                logger.info(f"Current vacation set to {vacation_id} for user {self.user_state.user_id}")
+                return vacation
+
+        logger.warning(f"Vacation with ID {vacation_id} not found for user {self.user_state.user_id}")
+        return None
+
+    def get_current_vacation_dates(self) -> Optional[tuple[datetime, datetime]]:
+        """
+        Возвращает даты текущего отпуска в виде кортежа (start_date, end_date).
+
+        Returns:
+            Optional[tuple[datetime, datetime]]: Кортеж с датами начала и окончания текущего отпуска,
+            или None, если текущий отпуск не установлен.
+        """
+        if self.user_state.current_vacation:
+            start_date = self.user_state.current_vacation.start_date
+            end_date = self.user_state.current_vacation.end_date
+            return start_date, end_date
+        else:
+            logger.warning("No current vacation is set.")
+            return None
+
+    def set_last_bot_message_id(self, message_id: str) -> None:
+        """
+        Устанавливает ID последнего сообщения, отправленного ботом пользователю.
+
+        Args:
+            message_id (str): ID сообщения, которое нужно установить как последнее.
+        """
+        self.user_state.last_bot_message_id = message_id
+        logger.info(f"Last bot message ID set to {message_id} for user {self.user_state.user_id}")
+
+    def get_last_bot_message_id(self) -> Optional[str]:
+        """
+        Возвращает ID последнего сообщения, отправленного ботом пользователю.
+
+        Returns:
+            Optional[str]: ID последнего сообщения или None, если сообщение не установлено.
+        """
+        return self.user_state.last_bot_message_id
+
+    def reset_current_vacation_and_limit(self) -> None:
+        """
+        Сбрасывает текущий отпуск (current_vacation) и лимит отпуска (current_limit).
+
+        После выполнения метода поля current_vacation и current_limit будут установлены в None.
+        """
+        self.user_state.current_vacation = None
+        self.user_state.current_limit = None
+        logger.info(f"Current vacation and limit reset for user {self.user_state.user_id}")
