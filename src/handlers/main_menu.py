@@ -1,8 +1,8 @@
 import json
 from bot.event import Event  # Импорт Event для типизации
 from src.keyboards import main_menu_keyboard
-from src.states.state_machine import UserStateMachine
-from src.handlers.annual_vacation import handle_annual_vacation
+from src.states import UserStateManager
+from src.handlers.annual_vacation import annual_vacation_menu_cb
 from src.handlers.limits_and_schedule import handle_view_limits_and_schedule
 from src.handlers.reschedule_vacation import handle_reschedule_vacation
 from src.handlers.cancel_vacation import handle_cancel_vacation
@@ -44,8 +44,8 @@ def handle_unpaid_vacation(bot, state_machine, user_id: str, event: Event) -> No
     handle_vacation_action(bot, state_machine, user_id, event, "Отпуск без оплаты оформлен")
 
 
-main_menu_cb_handlers = {
-    "annual_vacation_menu": handle_annual_vacation,
+main_menu_callbacks = {
+    "annual_vacation_menu": annual_vacation_menu_cb,
     "unpaid_vacation": handle_unpaid_vacation,
     "view_limits_and_schedule": handle_view_limits_and_schedule,
     "reschedule_vacation": handle_reschedule_vacation,
@@ -53,7 +53,7 @@ main_menu_cb_handlers = {
 }
 
 
-def main_menu_cb(bot, event: Event) -> None:
+def main_menu_callback_dispatcher(bot, event: Event) -> None:
     """Главный обработчик для команд основного меню.
 
     Args:
@@ -61,8 +61,8 @@ def main_menu_cb(bot, event: Event) -> None:
         event (Event): Данные события.
     """
     user_id = event.from_chat
-    state_machine = UserStateMachine.get_state(user_id)
+    user_state = UserStateManager.get_state(user_id)
     callback_data = event.data.get('callbackData')
-    handler = main_menu_cb_handlers.get(callback_data)
-    if handler:
-        handler(bot, state_machine, user_id, event)
+    callback = main_menu_callbacks.get(callback_data)
+    if callback:
+        callback(bot, user_state, user_id, event)
