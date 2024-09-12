@@ -1,3 +1,3 @@
-from src.states.user_state_manager import UserStateManager
+from src.states.state_machine import StateMachine
 
-__all__ = ["UserStateManager",]
+__all__ = ["StateMachine",]

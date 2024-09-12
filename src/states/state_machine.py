@@ -38,7 +38,7 @@ TRANSITIONS = [
               ] + annual_vacation_transitions + reschedule_vacation_transitions + cancel_vacation_transitions
 
 
-class UserStateMachine:
+class StateMachine:
     """State machine for handling bot states and transitions."""
 
     def __init__(self, initial_state: str = MAIN_MENU):
