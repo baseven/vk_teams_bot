@@ -4,7 +4,7 @@ from datetime import datetime
 
 from src.services import UserDataDatabaseService as DatabaseService
 from src.models import UserData, Vacation, VacationType, VacationStatus
-from src.states.state_machine import UserStateMachine
+from src.states import StateMachine
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class UserSession:
         """
         self.user_data = user_data
         self.database_service = database_service or DatabaseService()
-        self.state_machine = UserStateMachine(initial_state=self.user_data.state)
+        self.state_machine = StateMachine(initial_state=self.user_data.state)
 
     def save_session(self) -> None:
         """
