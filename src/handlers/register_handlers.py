@@ -1,11 +1,11 @@
 from bot.handler import BotButtonCommandHandler, StartCommandHandler, MessageHandler
-from src.handlers import (
+
+from src.callbacks import (
     start_cb,
     main_menu_callback_dispatcher,
     annual_vacation_callback_dispatcher,
     annual_vacation_message_cb,
-    reschedule_vacation_cb,
-    cancel_vacation_cb
+
 )
 
 # Словарь обработчиков: ключ - класс обработчика, значение - список callback-функций
@@ -14,8 +14,6 @@ HANDLERS = {
     BotButtonCommandHandler: [
         main_menu_callback_dispatcher,
         annual_vacation_callback_dispatcher,
-        reschedule_vacation_cb,
-        cancel_vacation_cb
     ],
     MessageHandler: [annual_vacation_message_cb]
 }

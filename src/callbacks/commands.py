@@ -1,8 +1,8 @@
 import json
 import logging
-from bot.event import Event  # Импорт Event для типизации
+from bot.event import Event
 from src.keyboards import main_menu_keyboard
-from src.states.state_machine import UserStateMachine
+from src.sessions import UserSession
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +16,7 @@ def start_cb(bot, event: Event) -> None:
     """
     user_id = event.from_chat
     logger.info(f"Received /start command from user {user_id}")
-
-    state_machine = UserStateMachine.get_state(user_id)
+    user_session = UserSession.get_session(user_id)
 
     response = bot.send_text(
         chat_id=user_id,
@@ -26,6 +25,7 @@ def start_cb(bot, event: Event) -> None:
     )
 
     logger.info(f"Response: {response.json()}")
-    state_machine.last_message_id = response.json().get('msgId')
-    state_machine.save_state()
+    last_bot_message_id = response.json().get('msgId')
+    user_session.set_last_bot_message_id(last_bot_message_id)
+    user_session.save_session()
     logger.info(f"Sent main menu to user {user_id}")
