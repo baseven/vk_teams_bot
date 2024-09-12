@@ -1,10 +1,10 @@
 from src.models.base import BaseModelConfig
-from src.models.user_state import UserState
+from src.models.user_data import UserData
 from src.models.vacation import Vacation, Limit, VacationType, VacationStatus
 
 __all__ = [
     "BaseModelConfig",
-    "UserState",
+    "UserData",
     "Vacation",
     "Limit",
     "VacationType",

@@ -1,75 +1,74 @@
 import logging
-from typing import Optional, Tuple
+from typing import Optional
 from datetime import datetime
 
-from src.services.user_state import UserStateDatabaseService as DatabaseService
-from src.models import UserState, Vacation, VacationType, VacationStatus
+from src.services import UserDataDatabaseService as DatabaseService
+from src.models import UserData, Vacation, VacationType, VacationStatus
 from src.states.state_machine import UserStateMachine
 
 logger = logging.getLogger(__name__)
 
 
-class UserStateManager:
-    """Class responsible for managing user's state and vacations."""
+class UserSession:
+    """Class responsible for managing user's session and associated data."""
 
-    def __init__(self, user_state: UserState, database_service: Optional[DatabaseService] = None) -> None:
+    def __init__(self, user_data: UserData, database_service: Optional[DatabaseService] = None) -> None:
         """
-        Initializes the UserStateManager with a given user state and database service.
+        Initializes the UserSession with a given user data and database service.
 
         Args:
-            user_state (UserState): The state of the user, which includes current vacations and limits.
+            user_data (UserData): The data of the user, which includes current vacations and limits.
             database_service (Optional[DatabaseService]): The service for interacting with the database.
         """
-        self.user_state = user_state
+        self.user_data = user_data
         self.database_service = database_service or DatabaseService()
-        self.state_machine = UserStateMachine(initial_state=self.user_state.state)
-        logger.debug(f"Initialized UserStateManager for user {user_state.user_id}")
+        self.state_machine = UserStateMachine(initial_state=self.user_data.state)
 
-    def save_state(self) -> None:
+    def save_session(self) -> None:
         """
-        Saves the current state of the user to the database.
+        Save the current session of the user to the database.
         """
-        self.user_state.state = self.state_machine.machine.state
-        self.database_service.save_user_state(self.user_state)
-        logger.info(f"State saved for user {self.user_state.user_id}: {self.user_state.state}")
+        self.user_data.state = self.state_machine.machine.state
+        self.database_service.save_user_data(self.user_data)
+        logger.info(f"Session for user {self.user_data.user_id} saved: {self.user_data.state}")
 
     @classmethod
-    def get_state(cls, user_id: str, database_service: Optional[DatabaseService] = None) -> 'UserStateManager':
+    def get_session(cls, user_id: str, database_service: Optional[DatabaseService] = None) -> 'UserSession':
         """
-        Fetches the user's state from the database or initializes a new state if not found.
+        Fetches the user's session from the database or initializes a new session if not found.
 
         Args:
             user_id (str): The unique identifier of the user.
-            database_service (Optional[DatabaseService]): The database service to use for fetching the state.
+            database_service (Optional[DatabaseService]): The database service to use for fetching the session.
 
         Returns:
-            UserStateManager: An instance of UserStateManager initialized with the user's state.
+            UserSession: An instance of UserSession initialized with the user's data.
         """
         database_service = database_service or DatabaseService()
-        user_state = database_service.get_user_state(user_id)
-        if not user_state:
-            user_state = cls._initialize_new_user(user_id=user_id, database_service=database_service)
-            logger.info(f"New state initialized for user {user_id}")
+        user_data = database_service.get_user_data(user_id)
+        if not user_data:
+            user_data = cls._initialize_new_user_data(user_id=user_id, database_service=database_service)
+            logger.info(f"New session initialized for user {user_id}")
         else:
-            logger.debug(f"Fetched existing state for user {user_id}")
-        return cls(user_state=user_state, database_service=database_service)
+            logger.debug(f"Fetched existing session for user {user_id}")
+        return cls(user_data=user_data, database_service=database_service)
 
     @staticmethod
-    def _initialize_new_user(user_id: str, database_service: Optional[DatabaseService]) -> UserState:
+    def _initialize_new_user_data(user_id: str, database_service: Optional[DatabaseService]) -> UserData:
         """
-        Initializes a new user state and saves it to the database.
+        Creates a new user profile and saves it to the database.
 
         Args:
             user_id (str): The unique identifier of the user.
             database_service (Optional[DatabaseService]): The service for interacting with the database.
 
         Returns:
-            UserState: A new user state object.
+            UserData: A new user data object.
         """
-        new_user_state = UserState(user_id=user_id)
-        database_service.save_user_state(new_user_state)
-        logger.info(f"New user state created for {user_id}")
-        return new_user_state
+        new_user_data = UserData(user_id=user_id)
+        database_service.save_user_data(new_user_data)
+        logger.info(f"New user data created for {user_id}")
+        return new_user_data
 
     def create_new_vacation(
             self,
@@ -98,9 +97,9 @@ class UserStateManager:
             end_date=end_date_dt,
             status=status
         )
-        self.user_state.current_vacation = new_vacation
+        self.user_data.current_vacation = new_vacation
         self._set_current_limit(vacation_type)
-        logger.info(f"New vacation created for user {self.user_state.user_id}: "
+        logger.info(f"New vacation created for user {self.user_data.user_id}: "
                     f"{start_date_dt.strftime('%d.%m.%Y')} - {end_date_dt.strftime('%d.%m.%Y')}")
         return new_vacation
 
@@ -111,20 +110,20 @@ class UserStateManager:
         Args:
             vacation_type (VacationType): The type of vacation for which to set the limit.
         """
-        for limit in self.user_state.limits:
+        for limit in self.user_data.limits:
             if limit.vacation_type == vacation_type:
-                self.user_state.current_limit = limit
-                logger.debug(f"Vacation limit set for user {self.user_state.user_id}: "
+                self.user_data.current_limit = limit
+                logger.debug(f"Vacation limit set for user {self.user_data.user_id}: "
                              f"{limit.available_days} days for {vacation_type}")
                 return
 
-        self.user_state.current_limit = None
-        logger.warning(f"No vacation limit found for user {self.user_state.user_id} "
+        self.user_data.current_limit = None
+        logger.warning(f"No vacation limit found for user {self.user_data.user_id} "
                        f"and vacation type {vacation_type}")
 
     def set_current_vacation(self, vacation_id: str) -> Optional[Vacation]:
         """
-        Sets the current vacation (current_vacation) by vacation_id and applies the corresponding limit.
+        Sets the current vacation by vacation_id and applies the corresponding limit.
 
         Args:
             vacation_id (str): Unique identifier for the vacation.
@@ -132,15 +131,15 @@ class UserStateManager:
         Returns:
             Optional[Vacation]: The found vacation or None if no matching vacation was found.
         """
-        vacation = next((vac for vac in self.user_state.vacations if vac.vacation_id == vacation_id), None)
+        vacation = next((vac for vac in self.user_data.vacations if vac.vacation_id == vacation_id), None)
 
         if vacation:
-            self.user_state.current_vacation = vacation
+            self.user_data.current_vacation = vacation
             self._set_current_limit(vacation.vacation_type)
-            logger.info(f"Current vacation set for user {self.user_state.user_id}: {vacation_id}")
+            logger.info(f"Current vacation set for user {self.user_data.user_id}: {vacation_id}")
             return vacation
 
-        logger.warning(f"Vacation with ID {vacation_id} not found for user {self.user_state.user_id}")
+        logger.warning(f"Vacation with ID {vacation_id} not found for user {self.user_data.user_id}")
 
     def get_current_vacation(self) -> Optional[Vacation]:
         """
@@ -149,23 +148,23 @@ class UserStateManager:
         Returns:
             Optional[Vacation]: The current vacation, or None if no vacation is set.
         """
-        return self.user_state.current_vacation
+        return self.user_data.current_vacation
 
-    def get_current_vacation_dates(self) -> Optional[Tuple[str, str]]:
+    def get_current_vacation_dates(self) -> Optional[tuple[str, str]]:
         """
         Returns the dates of the current vacation as a tuple (start_date, end_date) in 'DD.MM.YYYY' format.
 
         Returns:
-            Optional[Tuple[str, str]]: Tuple with the start and end dates of the current vacation,
+            Optional[tuple[str, str]]: Tuple with the start and end dates of the current vacation,
             or None if no current vacation is set.
         """
-        if self.user_state.current_vacation:
-            start_date = self.user_state.current_vacation.start_date.strftime("%d.%m.%Y")
-            end_date = self.user_state.current_vacation.end_date.strftime("%d.%m.%Y")
-            logger.debug(f"Fetched vacation dates for user {self.user_state.user_id}: {start_date} - {end_date}")
+        if self.user_data.current_vacation:
+            start_date = self.user_data.current_vacation.start_date.strftime("%d.%m.%Y")
+            end_date = self.user_data.current_vacation.end_date.strftime("%d.%m.%Y")
+            logger.debug(f"Fetched vacation dates for user {self.user_data.user_id}: {start_date} - {end_date}")
             return start_date, end_date
 
-        logger.warning(f"No current vacation set for user {self.user_state.user_id}")
+        logger.warning(f"No current vacation set for user {self.user_data.user_id}")
 
     def set_last_bot_message_id(self, message_id: str) -> None:
         """
@@ -174,8 +173,8 @@ class UserStateManager:
         Args:
             message_id (str): The ID of the last message.
         """
-        self.user_state.last_bot_message_id = message_id
-        logger.debug(f"Last bot message ID set for user {self.user_state.user_id}: {message_id}")
+        self.user_data.last_bot_message_id = message_id
+        logger.debug(f"Last bot message ID set for user {self.user_data.user_id}: {message_id}")
 
     def get_last_bot_message_id(self) -> Optional[str]:
         """
@@ -184,7 +183,7 @@ class UserStateManager:
         Returns:
             Optional[str]: The ID of the last message or None if no message ID is set.
         """
-        return self.user_state.last_bot_message_id
+        return self.user_data.last_bot_message_id
 
     def reset_current_vacation_and_limit(self) -> None:
         """
@@ -192,6 +191,6 @@ class UserStateManager:
 
         After this method is called, both current_vacation and current_limit will be set to None.
         """
-        self.user_state.current_vacation = None
-        self.user_state.current_limit = None
-        logger.info(f"Current vacation and limit reset for user {self.user_state.user_id}")
+        self.user_data.current_vacation = None
+        self.user_data.current_limit = None
+        logger.info(f"Current vacation and limit reset for user {self.user_data.user_id}")
