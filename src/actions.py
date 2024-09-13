@@ -31,6 +31,7 @@ class MainMenuActions(Enum):
     VIEW_LIMITS_AND_SCHEDULE = ActionBase("view_limits_and_schedule", "Посмотреть лимиты и график отпусков")
     RESCHEDULE_VACATION = ActionBase("reschedule_vacation", "Перенести отпуск")
     CANCEL_VACATION = ActionBase("cancel_vacation", "Отменить отпуск")
+    BACK_TO_MAIN_MENU = ActionBase("back_to_main_menu", "Вернуться в главное меню")
 
 
 class AnnualVacationActions(Enum):
@@ -38,12 +39,14 @@ class AnnualVacationActions(Enum):
     HANDLE_ANNUAL_VACATION = ActionBase("handle_annual_vacation", "")
     CREATE_ANNUAL_VACATION = ActionBase("create_annual_vacation", "Другие даты")
     CONFIRM_ANNUAL_VACATION = ActionBase("confirm_annual_vacation", "Оформить")
+    BACK_TO_MAIN_MENU = ActionBase("back_to_main_menu", "Вернуться в главное меню")
 
 
 class CancelVacationActions(Enum):
     """Действия для отмены отпуска."""
     SELECT_VACATION_TO_CANCEL = ActionBase("select_vacation_to_cancel", "")
     CONFIRM_VACATION_CANCELLATION = ActionBase("confirm_vacation_cancellation", "Удалить")
+    BACK_TO_MAIN_MENU = ActionBase("back_to_main_menu", "Вернуться в главное меню")
 
 
 class RescheduleVacationActions(Enum):
@@ -51,3 +54,4 @@ class RescheduleVacationActions(Enum):
     SELECT_VACATION_TO_RESCHEDULE = ActionBase("select_vacation_to_reschedule", "")
     RESCHEDULE_VACATION = ActionBase("reschedule_vacation", "Перенести отпуск")
     CONFIRM_VACATION_RESCHEDULE = ActionBase("confirm_vacation_reschedule", "Оформить")
+    BACK_TO_MAIN_MENU = ActionBase("back_to_main_menu", "Вернуться в главное меню")
