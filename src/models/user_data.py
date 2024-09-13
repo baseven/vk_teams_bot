@@ -3,7 +3,8 @@ from typing import List, Optional
 
 from pydantic import Field
 
-from src.models import BaseModelConfig, Vacation, Limit
+from src.models.base import BaseModelConfig
+from src.models.vacation import Vacation, Limit
 from src.states.state_machine import MAIN_MENU
 
 

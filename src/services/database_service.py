@@ -1,7 +1,8 @@
 from typing import Optional
 
-from models.user_data import UserData
-from services.user_state import UserDataMongoService, UserDataRedisService
+from src.models.user_data import UserData
+from src.services.mongo_service import UserDataMongoService
+from src.services.redis_service import UserDataRedisService
 
 
 class UserDataDatabaseService:
