@@ -1,14 +1,14 @@
-from typing import List, Tuple
+from typing import List
 
-from src.actions import AnnualVacationActions
-from src.models.vacation import Vacation
+from src.actions import BaseActions
+from src.models.vacation import Vacation, Limit
 from src.styles import ButtonStyle
 
 CALLBACK_DATA_SEPARATOR = '|'
 
 
 def create_keyboard(
-        actions: List[AnnualVacationActions],
+        actions: List[BaseActions],
         button_style: ButtonStyle = ButtonStyle.PRIMARY
 ) -> List[List[dict]]:
     """
@@ -84,3 +84,44 @@ def parse_callback_data(callback_data: str) -> list[str] | tuple[str, str]:
 def parse_vacation_dates(vacation_dates: str) -> tuple[str, str]:
     start_date, end_date = vacation_dates.split('-')
     return start_date.strip(), end_date.strip()
+
+
+def format_limits_text(limits: list[Limit]) -> str:
+    """
+    Formats the user's vacation limits into a readable string.
+
+    Args:
+        limits (list[Limit]): List of limits associated with the user.
+
+    Returns:
+        str: Formatted string showing the vacation limits.
+    """
+    if not limits:
+        return "Лимиты отпусков не найдены."
+
+    limits_text = "Лимиты отпусков:\n" + "\n".join(
+        [f"{limit.vacation_type.value}: {limit.available_days} дней" for limit in limits]
+    )
+    return limits_text
+
+
+def format_vacations_text(vacations: list[Vacation]) -> str:
+    """
+    Formats the user's vacation schedule into a readable string.
+
+    Args:
+        vacations (list[Vacation]): List of vacations associated with the user.
+
+    Returns:
+        str: Formatted string showing the vacation schedule.
+    """
+    if not vacations:
+        return "График отпусков не найден."
+
+    schedule_text = "График отпусков:\n" + "\n".join(
+        [
+            f"Тип: {vacation.vacation_type.value}, с {vacation.start_date.strftime('%d.%m.%Y')} по {vacation.end_date.strftime('%d.%m.%Y')}, статус: {vacation.status.value}"
+            for vacation in vacations
+        ]
+    )
+    return schedule_text

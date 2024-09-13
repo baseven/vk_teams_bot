@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import datetime
 
 from src.services import UserDataDatabaseService as DatabaseService
-from src.models import UserData, Vacation, VacationType, VacationStatus
+from src.models import UserData, Vacation, Limit, VacationType, VacationStatus
 from src.states import StateMachine
 
 logger = logging.getLogger(__name__)
@@ -168,20 +168,20 @@ class UserSession:
 
     def set_last_bot_message_id(self, message_id: str) -> None:
         """
-        Sets the ID of the last message sent by the bot to the user.
+        Sets the ID of the last message_callbacks sent by the bot to the user.
 
         Args:
-            message_id (str): The ID of the last message.
+            message_id (str): The ID of the last message_callbacks.
         """
         self.user_data.last_bot_message_id = message_id
-        logger.debug(f"Last bot message ID set for user {self.user_data.user_id}: {message_id}")
+        logger.debug(f"Last bot message_callbacks ID set for user {self.user_data.user_id}: {message_id}")
 
     def get_last_bot_message_id(self) -> Optional[str]:
         """
-        Returns the ID of the last message sent by the bot to the user.
+        Returns the ID of the last message_callbacks sent by the bot to the user.
 
         Returns:
-            Optional[str]: The ID of the last message or None if no message ID is set.
+            Optional[str]: The ID of the last message_callbacks or None if no message_callbacks ID is set.
         """
         return self.user_data.last_bot_message_id
 
@@ -194,3 +194,49 @@ class UserSession:
         self.user_data.current_vacation = None
         self.user_data.current_limit = None
         logger.info(f"Current vacation and limit reset for user {self.user_data.user_id}")
+
+    def set_new_vacation_dates(self, start_date: str, end_date: str) -> None:
+        """
+        Set new vacation dates for editing.
+
+        Args:
+            start_date (str): Start date in 'DD.MM.YYYY' format.
+            end_date (str): End date in 'DD.MM.YYYY' format.
+
+        Raises:
+            ValueError: If the start date is later than the end date.
+        """
+        start_date_dt = datetime.strptime(start_date, "%d.%m.%Y")
+        end_date_dt = datetime.strptime(end_date, "%d.%m.%Y")
+
+        self.user_data.new_vacation_dates = (start_date_dt, end_date_dt)
+        logger.info(f"New vacation dates set for user {self.user_data.user_id}: {start_date} - {end_date}")
+
+    def get_new_vacation_dates(self) -> Optional[tuple[str, str]]:
+        """
+        Get the new vacation dates being edited as a tuple (start_date, end_date) in 'DD.MM.YYYY' format.
+
+        Returns:
+            Optional[tuple[str, str]]: Tuple with the start and end dates in 'DD.MM.YYYY' format,
+            or None if no new vacation dates are set.
+        """
+        if self.user_data.new_vacation_dates:
+            start_date, end_date = self.user_data.new_vacation_dates
+            logger.debug(
+                f"Fetched new vacation dates for user {self.user_data.user_id}: {start_date.strftime('%d.%m.%Y')} - {end_date.strftime('%d.%m.%Y')}")
+            return start_date.strftime("%d.%m.%Y"), end_date.strftime("%d.%m.%Y")
+
+        logger.warning(f"No new vacation dates set for user {self.user_data.user_id}")
+        return None
+
+    def get_vacations_and_limits(self) -> tuple[list[Vacation], list[Limit]]:
+        """
+        Returns the user's vacations and limits as a tuple.
+
+        Returns:
+            tuple[list[Vacation], list[Limit]]: A tuple containing the list of vacations and the list of limits.
+        """
+        vacations = self.user_data.vacations
+        limits = self.user_data.limits
+        logger.debug(f"Returning vacations and limits for user {self.user_data.user_id}")
+        return vacations, limits

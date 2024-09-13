@@ -7,12 +7,12 @@ from src.states.reschedule_vacation import reschedule_vacation_states, reschedul
 from src.states.cancel_vacation import cancel_vacation_states, cancel_vacation_transitions
 
 MAIN_MENU = 'main_menu'
-UNPAID_VACATION = 'unpaid_vacation'
+UNPAID_VACATION = 'unpaid_vacation_menu'
 VIEW_LIMITS_AND_SCHEDULE = 'view_limits_and_schedule'
 
 TO_MAIN_MENU = 'to_main_menu'
 TO_ANNUAL_VACATION_MENU = 'to_annual_vacation_menu'
-TO_UNPAID_VACATION = 'to_unpaid_vacation'
+TO_UNPAID_VACATION = 'to_unpaid_vacation_menu'
 TO_VIEW_LIMITS_AND_SCHEDULE = 'to_view_limits_and_schedule'
 TO_RESCHEDULE_VACATION_MENU = 'to_reschedule_vacation_menu'
 TO_CANCEL_VACATION_MENU = 'to_cancel_vacation_menu'

@@ -26,11 +26,15 @@ def annual_vacation_menu_cb(
         callback_data_value: str = None
 ) -> None:
     logger.info(f"Annual vacation menu callback for user {user_id}")
-
     user_session.state_machine.to_annual_vacation_menu()
     user_session.save_session()
 
-    annual_vacation_keyboard = create_vacation_keyboard(
+    # TODO: Get vacation_limits from user_data
+    available_days = vacation_limits_dict[VacationType.ANNUAL_PAID].available_days
+    annual_vacation_text = ANNUAL_VACATION_MENU_TEXT_TEMPLATE.format(available_days=available_days)
+
+    # TODO: Add filter by vacation type
+    vacation_keyboard = create_vacation_keyboard(
         planned_vacations=vacation_schedule,
         callback_prefix=Actions.HANDLE_ANNUAL_VACATION.value
     )
@@ -39,11 +43,8 @@ def annual_vacation_menu_cb(
         Actions.CREATE_ANNUAL_VACATION,
         Actions.BACK_TO_MAIN_MENU
     ]
-    annual_vacation_keyboard2 = create_keyboard(actions=actions)
-
-    annual_vacation_menu_keyboard = annual_vacation_keyboard + annual_vacation_keyboard2
-    available_days = vacation_limits_dict[VacationType.ANNUAL_PAID].available_days
-    annual_vacation_text = ANNUAL_VACATION_MENU_TEXT_TEMPLATE.format(available_days=available_days)
+    actions_keyboard = create_keyboard(actions=actions)
+    annual_vacation_menu_keyboard = vacation_keyboard + actions_keyboard
 
     bot.edit_text(
         chat_id=user_id,

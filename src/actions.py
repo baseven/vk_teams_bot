@@ -1,9 +1,8 @@
 from enum import Enum
 
 
-class BaseActions(Enum):
-    """Общие действия для всех меню с их описанием на русском."""
-    BACK_TO_MAIN_MENU = ("back_to_main_menu", "Вернуться в главное меню")
+class ActionBase:
+    """Базовый класс для обработки callback_data и описания."""
 
     def __init__(self, callback_data, description):
         self.callback_data = callback_data
@@ -20,24 +19,35 @@ class BaseActions(Enum):
         return self.description
 
 
-class MainMenuActions(BaseActions):
+class BaseActions(Enum):
+    """Общие действия для всех меню."""
+    BACK_TO_MAIN_MENU = ActionBase("back_to_main_menu", "Вернуться в главное меню")
+
+
+class MainMenuActions(Enum):
     """Действия для главного меню."""
+    ANNUAL_VACATION_MENU = ActionBase("annual_vacation_menu", "Оформить ежегодный отпуск")
+    UNPAID_VACATION = ActionBase("unpaid_vacation", "Оформить отпуск без оплаты")
+    VIEW_LIMITS_AND_SCHEDULE = ActionBase("view_limits_and_schedule", "Посмотреть лимиты и график отпусков")
+    RESCHEDULE_VACATION = ActionBase("reschedule_vacation", "Перенести отпуск")
+    CANCEL_VACATION = ActionBase("cancel_vacation", "Отменить отпуск")
 
-    ANNUAL_VACATION_MENU = ("annual_vacation_menu", "Оформить ежегодный отпуск")
-    UNPAID_VACATION = ("unpaid_vacation", "Оформить отпуск без оплаты")
-    VIEW_LIMITS_AND_SCHEDULE = ("view_limits_and_schedule", "Посмотреть лимиты и график отпусков")
-    RESCHEDULE_VACATION = ("reschedule_vacation", "Перенести отпуск")
-    CANCEL_VACATION = ("cancel_vacation", "Отменить отпуск")
 
-
-class AnnualVacationActions(BaseActions):
+class AnnualVacationActions(Enum):
     """Действия для меню отпуска."""
-    HANDLE_ANNUAL_VACATION = ("handle_annual_vacation", "")
-    CREATE_ANNUAL_VACATION = ("create_annual_vacation", "Другие даты")
-    CONFIRM_ANNUAL_VACATION = ("confirm_annual_vacation", "Оформить")
+    HANDLE_ANNUAL_VACATION = ActionBase("handle_annual_vacation", "")
+    CREATE_ANNUAL_VACATION = ActionBase("create_annual_vacation", "Другие даты")
+    CONFIRM_ANNUAL_VACATION = ActionBase("confirm_annual_vacation", "Оформить")
 
 
-class EditVacationMenuActions(BaseActions):
-    """Действия для изменения отпуска."""
-    RESCHEDULE_VACATION = ("reschedule_vacation", "Перенести отпуск")
-    CANCEL_VACATION = ("cancel_vacation", "Отменить отпуск")
+class CancelVacationActions(Enum):
+    """Действия для отмены отпуска."""
+    SELECT_VACATION_TO_CANCEL = ActionBase("select_vacation_to_cancel", "")
+    CONFIRM_VACATION_CANCELLATION = ActionBase("confirm_vacation_cancellation", "Удалить")
+
+
+class RescheduleVacationActions(Enum):
+    """Действия для переноса отпуска."""
+    SELECT_VACATION_TO_RESCHEDULE = ActionBase("select_vacation_to_reschedule", "")
+    RESCHEDULE_VACATION = ActionBase("reschedule_vacation", "Перенести отпуск")
+    CONFIRM_VACATION_RESCHEDULE = ActionBase("confirm_vacation_reschedule", "Оформить")

@@ -5,7 +5,9 @@ from src.callbacks import (
     main_menu_callback_dispatcher,
     annual_vacation_callback_dispatcher,
     annual_vacation_message_cb,
-
+    reschedule_vacation_callback_dispatcher,
+    reschedule_vacation_message_cb,
+    cancel_vacation_callback_dispatcher
 )
 
 # Словарь обработчиков: ключ - класс обработчика, значение - список callback-функций
@@ -14,8 +16,10 @@ HANDLERS = {
     BotButtonCommandHandler: [
         main_menu_callback_dispatcher,
         annual_vacation_callback_dispatcher,
+        reschedule_vacation_callback_dispatcher,
+        cancel_vacation_callback_dispatcher,
     ],
-    MessageHandler: [annual_vacation_message_cb]
+    MessageHandler: [annual_vacation_message_cb, reschedule_vacation_message_cb],
 }
 
 

@@ -51,8 +51,8 @@ def create_annual_vacation_from_dates_cb(
     user_session.save_session()
 
 
-# TODO: Consider moving this to a separate module. For message handling, the dispatcher should work by state.
-#  Implement a unified dispatcher for all message callbacks.
+# TODO: Consider moving this to a separate module. For message_callbacks handling, the dispatcher should work by state.
+#  Implement a unified dispatcher for all message_callbacks callbacks.
 def annual_vacation_message_cb(bot, event: Event) -> None:
     """Handles incoming messages related to annual vacations."""
     user_id = event.from_chat

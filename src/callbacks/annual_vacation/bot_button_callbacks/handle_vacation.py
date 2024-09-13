@@ -26,7 +26,7 @@ def handle_annual_vacation_cb(
     user_session.save_session()
 
     start_date, end_date = user_session.get_current_vacation_dates()
-    handle_annual_vacation_text = HANDLE_ANNUAL_VACATION_TEXT_TEMPLATE.format(period=f"{start_date}- {end_date}")
+    handle_annual_vacation_text = HANDLE_ANNUAL_VACATION_TEXT_TEMPLATE.format(period=f"{start_date} - {end_date}")
 
     actions = [
         Actions.CONFIRM_ANNUAL_VACATION,
