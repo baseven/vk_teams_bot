@@ -5,7 +5,10 @@ from bot.bot import Bot
 from config import VK_BOT_TOKEN
 from handlers.register_handlers import register_handlers  # Import from the handlers directory
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message_callbacks)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
 logger = logging.getLogger(__name__)
 
 
