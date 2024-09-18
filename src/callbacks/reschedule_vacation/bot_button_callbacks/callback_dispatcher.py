@@ -5,7 +5,7 @@ from bot.event import Event
 from src.actions import RescheduleVacationActions as Actions
 from src.callbacks.reschedule_vacation.bot_button_callbacks import (select_vacation_to_reschedule_cb, create_vacation, confirm_reschedule_vacation_cb)
 from src.callbacks.common_bot_button import back_to_main_menu_cb
-from src.callbacks.callback_dispatcher import callback_dispatcher
+from src.callbacks.dispatchers import callback_dispatcher
 
 logger = logging.getLogger(__name__)
 

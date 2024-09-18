@@ -4,9 +4,8 @@ from src.callbacks import (
     start_cb,
     main_menu_callback_dispatcher,
     annual_vacation_callback_dispatcher,
-    annual_vacation_message_cb,
+    handle_incoming_message,
     reschedule_vacation_callback_dispatcher,
-    reschedule_vacation_message_cb,
     cancel_vacation_callback_dispatcher
 )
 
@@ -19,7 +18,7 @@ HANDLERS = {
         reschedule_vacation_callback_dispatcher,
         cancel_vacation_callback_dispatcher,
     ],
-    MessageHandler: [annual_vacation_message_cb, reschedule_vacation_message_cb],
+    MessageHandler: [handle_incoming_message],
 }
 
 

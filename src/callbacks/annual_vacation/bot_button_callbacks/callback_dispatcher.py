@@ -6,7 +6,7 @@ from src.actions import AnnualVacationActions as Actions
 from src.callbacks.annual_vacation.bot_button_callbacks import (confirm_annual_vacation_cb, create_annual_vacation_cb,
                                                                 handle_annual_vacation_cb)
 from src.callbacks.common_bot_button import back_to_main_menu_cb
-from src.callbacks.callback_dispatcher import callback_dispatcher
+from src.callbacks.dispatchers import callback_dispatcher
 
 logger = logging.getLogger(__name__)
 
