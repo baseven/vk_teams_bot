@@ -7,24 +7,27 @@ from src.styles import ButtonStyle
 CALLBACK_DATA_SEPARATOR = '|'
 
 
+from enum import Enum
+
 def create_keyboard(
-        actions: List[BaseActions],
+        actions: List[Enum],  # Общий тип для перечислений
         button_style: ButtonStyle = ButtonStyle.PRIMARY
 ) -> List[List[dict]]:
     """
     Создает клавиатуру на основе списка действий (actions) и стиля кнопки.
 
     Args:
-        actions (List[VacationMenuActions]): Список действий, для которых нужно создать кнопки.
+        actions (List[Enum]): Список действий, для которых нужно создать кнопки.
         button_style (ButtonStyle, optional): Стиль кнопки. По умолчанию PRIMARY.
 
     Returns:
         List[List[dict]]: Сгенерированная клавиатура.
     """
     return [
-        [{"text": action.text, "callbackData": action.value, "style": button_style.value}]
+        [{"text": action.value.text, "callbackData": action.value.value, "style": button_style.value}]
         for action in actions
     ]
+
 
 
 def create_vacation_keyboard(
