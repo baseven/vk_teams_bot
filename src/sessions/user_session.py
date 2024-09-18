@@ -1,9 +1,12 @@
 import logging
+
 from typing import Optional
 from datetime import datetime
 
-from src.services import UserDataDatabaseService as DatabaseService
+from src.data.vacation_limits import vacation_limits
+from src.data.vacation_schedule import vacation_schedule
 from src.models import UserData, Vacation, Limit, VacationType, VacationStatus
+from src.services import UserDataDatabaseService as DatabaseService
 from src.states import StateMachine
 
 logger = logging.getLogger(__name__)
@@ -28,7 +31,7 @@ class UserSession:
         """
         Save the current session of the user to the database.
         """
-        self.user_data.state = self.state_machine.machine.state
+        self.user_data.state = self.state_machine.state
         self.database_service.save_user_data(self.user_data)
         logger.info(f"Session for user {self.user_data.user_id} saved: {self.user_data.state}")
 
@@ -65,7 +68,15 @@ class UserSession:
         Returns:
             UserData: A new user data object.
         """
-        new_user_data = UserData(user_id=user_id)
+        #TODO:Currently, vacation limits and schedule are loaded from static data files.
+        # In the future, this data will be fetched from the database.
+        vacations = vacation_schedule
+        limits = vacation_limits
+        new_user_data = UserData(
+            user_id=user_id,
+            vacations=vacations,
+            limits=limits,
+        )
         database_service.save_user_data(new_user_data)
         logger.info(f"New user data created for {user_id}")
         return new_user_data

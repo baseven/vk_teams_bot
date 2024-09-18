@@ -43,6 +43,7 @@ class StateMachine:
 
     def __init__(self, initial_state: str = MAIN_MENU):
         """Initialize the bot state machine."""
+        self.state = initial_state
         self.machine = Machine(
             model=self,
             states=STATES,
