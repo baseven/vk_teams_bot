@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event, EventType
 
-from src.actions import AnnualVacationActions as Actions
+from src.actions.annual_vacation import AnnualVacationActions as Actions
 from src.models.vacation import VacationType
 from src.sessions import UserSession
 from src.utils import create_keyboard, parse_vacation_dates
