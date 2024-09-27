@@ -8,7 +8,6 @@ class Triggers(Enum):
     TO_HANDLE_ANNUAL_VACATION = 'to_handle_annual_vacation'
     TO_CREATE_ANNUAL_VACATION = 'to_create_annual_vacation'
     TO_CONFIRM_ANNUAL_VACATION = 'to_confirm_annual_vacation'
-    TO_BACK_TO_MAIN_MENU = 'to_back_to_main_menu'
 
 class AnnualVacation:
     """Class representing the states and transitions for the Annual Vacation process."""
