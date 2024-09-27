@@ -28,7 +28,7 @@ def cancel_vacation_menu_cb(
     # TODO: Add filter by vacation type
     vacation_keyboard = create_vacation_keyboard(
         planned_vacations=vacation_schedule,
-        callback_prefix=Actions.SELECT_VACATION_TO_CANCEL.value
+        callback_prefix=Actions.SELECT_VACATION_TO_CANCEL.callback_data
     )
 
     actions = [

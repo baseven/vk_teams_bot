@@ -103,7 +103,7 @@ def format_limits_text(limits: list[Limit]) -> str:
         return "Лимиты отпусков не найдены."
 
     limits_text = "Лимиты отпусков:\n" + "\n".join(
-        [f"{limit.vacation_type.value}: {limit.available_days} дней" for limit in limits]
+        [f"{limit.vacation_type}: {limit.available_days} дней" for limit in limits]
     )
     return limits_text
 
@@ -123,7 +123,7 @@ def format_vacations_text(vacations: list[Vacation]) -> str:
 
     schedule_text = "График отпусков:\n" + "\n".join(
         [
-            f"Тип: {vacation.vacation_type.value}, с {vacation.start_date.strftime('%d.%m.%Y')} по {vacation.end_date.strftime('%d.%m.%Y')}, статус: {vacation.status.value}"
+            f"Тип: {vacation.vacation_type}, с {vacation.start_date.strftime('%d.%m.%Y')} по {vacation.end_date.strftime('%d.%m.%Y')}, статус: {vacation.status}"
             for vacation in vacations
         ]
     )

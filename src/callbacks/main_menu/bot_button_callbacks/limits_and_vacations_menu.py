@@ -1,28 +1,27 @@
 import json
 import logging
 
-from bot.event import Event  # Импорт Event для типизации
+from bot.event import Event
 
-from src.actions import BaseActions as Actions
+from src.actions.limits_and_vacations import LimitsAndVacationsActions as Actions
 from src.sessions import UserSession
 from src.utils import create_keyboard, format_limits_text, format_vacations_text
 
 logger = logging.getLogger(__name__)
 
 
-def view_limits_and_schedule_cb(
+def limits_and_vacations_menu_cb(
         bot,
         user_session: UserSession,
         user_id: str,
         event: Event,
         callback_data_value: str = None
 ) -> None:
-    logger.info(f"View limits and schedule callback for user {user_id}")
-    user_session.state_machine.to_view_limits_and_schedule()
+    logger.info(f"View limits and vacations callback for user {user_id}")
+    user_session.state_machine.to_limits_and_vacations_menu()
     user_session.save_session()
 
     vacations, limits = user_session.get_vacations_and_limits()
-
     limits_text = format_limits_text(limits)
     schedule_text = format_vacations_text(vacations)
     limits_and_schedule_text = f"{limits_text}\n\n{schedule_text}"
