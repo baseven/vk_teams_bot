@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions import MainMenuActions as Actions
+from src.actions.main_menu import MainMenuActions as Actions
 from src.sessions import UserSession
 from src.utils import create_keyboard
 
@@ -26,10 +26,10 @@ def back_to_main_menu_cb(
 
     actions = [
         Actions.ANNUAL_VACATION_MENU,
-        Actions.UNPAID_VACATION,
-        Actions.VIEW_LIMITS_AND_SCHEDULE,
-        Actions.RESCHEDULE_VACATION,
-        Actions.CANCEL_VACATION,
+        Actions.UNPAID_VACATION_MENU,
+        Actions.LIMITS_AND_VACATIONS_MENU,
+        Actions.RESCHEDULE_VACATION_MENU,
+        Actions.CANCEL_VACATION_MENU,
     ]
     main_menu_keyboard = create_keyboard(actions=actions)
 

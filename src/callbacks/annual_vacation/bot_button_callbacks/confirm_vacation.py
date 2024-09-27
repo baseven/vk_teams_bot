@@ -18,6 +18,8 @@ def confirm_annual_vacation_cb(
         callback_data_value: str
 ) -> None:
     logger.info(f"Confirm annual vacation callback for {user_id}")
+    user_session.state_machine.to_confirm_annual_vacation()
+    user_session.save_session()
     # TODO: Add vacation approval request in the future
     # current_vacation = user_session.get_current_vacation()
 

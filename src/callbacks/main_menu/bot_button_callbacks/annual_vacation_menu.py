@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions import AnnualVacationActions as Actions
+from src.actions.annual_vacation import AnnualVacationActions as Actions
 from src.data.vacation_limits import vacation_limits_dict
 from src.data.vacation_schedule import vacation_schedule
 from src.models.vacation import VacationType
@@ -36,7 +36,7 @@ def annual_vacation_menu_cb(
     # TODO: Add filter by vacation type
     vacation_keyboard = create_vacation_keyboard(
         planned_vacations=vacation_schedule,
-        callback_prefix=Actions.HANDLE_ANNUAL_VACATION.value
+        callback_prefix=Actions.HANDLE_ANNUAL_VACATION.callback_data
     )
 
     actions = [

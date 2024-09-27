@@ -1,31 +1,26 @@
+from enum import Enum
 from transitions import State
 
-from src.actions.main_menu import MainMenuActions as Actions
-from src.states.state_menu_base import StateMenuBase
 
-class MainMenuTriggers:
-    """Class containing all triggers for the main menu."""
-    TO_MAIN_MENU = 'to_main_menu'
+class Triggers(Enum):
+    """Triggers for state transitions in the main menu."""
     TO_ANNUAL_VACATION_MENU = 'to_annual_vacation_menu'
-    TO_UNPAID_VACATION = 'to_unpaid_vacation_menu'
-    LIMITS_AND_VACATIONS_MENU = 'to_limits_and_vacations_menu'
+    TO_UNPAID_VACATION_MENU = 'to_unpaid_vacation_menu'
+    TO_LIMITS_AND_VACATIONS_MENU = 'to_limits_and_vacations_menu'
     TO_RESCHEDULE_VACATION_MENU = 'to_reschedule_vacation_menu'
     TO_CANCEL_VACATION_MENU = 'to_cancel_vacation_menu'
+    TO_MAIN_MENU = 'to_main_menu'
 
-
-class MainMenu(StateMenuBase):
+class MainMenu:
     """Class representing the states and transitions for the main menu."""
-    initial_state = 'main_menu'
-    #TODO: try without .callback_data
-    main_menu = State(name=initial_state)
-    annual_vacation_menu = State(name=Actions.ANNUAL_VACATION_MENU.callback_data)
-    unpaid_vacation_menu = State(name=Actions.UNPAID_VACATION_MENU.callback_data)
-    limits_and_vacations_menu = State(name=Actions.LIMITS_AND_VACATIONS_MENU.callback_data)
-    reschedule_vacation_menu = State(name=Actions.RESCHEDULE_VACATION_MENU.callback_data)
-    cancel_vacation_menu = State(name=Actions.CANCEL_VACATION_MENU.callback_data)
+    main_menu = State(name='main_menu')
+    annual_vacation_menu = State(name='annual_vacation_menu')
+    unpaid_vacation_menu = State(name='unpaid_vacation_menu')
+    limits_and_vacations_menu = State(name='limits_and_vacations_menu')
+    reschedule_vacation_menu = State(name='reschedule_vacation_menu')
+    cancel_vacation_menu = State(name='cancel_vacation_menu')
 
-    # Define state list and transitions
-    _states = [
+    states = [
         main_menu,
         annual_vacation_menu,
         unpaid_vacation_menu,
@@ -34,36 +29,37 @@ class MainMenu(StateMenuBase):
         cancel_vacation_menu,
     ]
 
-    #TODO: try without .name
-    _transitions = [
+    transitions = [
         {
-            'trigger': MainMenuTriggers.TO_ANNUAL_VACATION_MENU,
-            'source': main_menu.name,
-            'dest': annual_vacation_menu.name
+            'trigger': Triggers.TO_ANNUAL_VACATION_MENU.value,
+            'source': main_menu,
+            'dest': annual_vacation_menu
         },
         {
-            'trigger': MainMenuTriggers.TO_UNPAID_VACATION,
-            'source': main_menu.name,
-            'dest': unpaid_vacation_menu.name
+            'trigger': Triggers.TO_UNPAID_VACATION_MENU.value,
+            'source': main_menu,
+            'dest': unpaid_vacation_menu
         },
         {
-            'trigger': MainMenuTriggers.LIMITS_AND_VACATIONS_MENU,
-            'source': main_menu.name,
-            'dest': limits_and_vacations_menu.name
+            'trigger': Triggers.TO_LIMITS_AND_VACATIONS_MENU.value,
+            'source': main_menu,
+            'dest': limits_and_vacations_menu
         },
         {
-            'trigger': MainMenuTriggers.TO_RESCHEDULE_VACATION_MENU,
-            'source': main_menu.name,
-            'dest': reschedule_vacation_menu.name
+            'trigger': Triggers.TO_RESCHEDULE_VACATION_MENU.value,
+            'source': main_menu,
+            'dest': reschedule_vacation_menu
         },
         {
-            'trigger': MainMenuTriggers.TO_CANCEL_VACATION_MENU,
-            'source': main_menu.name,
-            'dest': cancel_vacation_menu.name
+            'trigger': Triggers.TO_CANCEL_VACATION_MENU.value,
+            'source': main_menu,
+            'dest': cancel_vacation_menu
         },
         {
-            'trigger': MainMenuTriggers.TO_MAIN_MENU,
+            'trigger': Triggers.TO_MAIN_MENU.value,
             'source': '*',
-            'dest': main_menu.name
+            'dest': main_menu
         },
     ]
+
+    initial_state = main_menu

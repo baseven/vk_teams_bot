@@ -1,4 +1,4 @@
-from src.actions import AnnualVacationActions as Actions
+from src.actions.annual_vacation import AnnualVacationActions as Actions
 from src.styles import ButtonStyle
 
 annual_vacation_buttons = [

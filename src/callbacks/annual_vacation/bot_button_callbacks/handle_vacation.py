@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions import AnnualVacationActions as Actions
+from src.actions.annual_vacation import AnnualVacationActions as Actions
 from src.sessions import UserSession
 from src.utils import create_keyboard
 
