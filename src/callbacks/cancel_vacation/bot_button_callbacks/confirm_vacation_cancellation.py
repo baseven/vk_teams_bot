@@ -1,4 +1,3 @@
-import json
 import logging
 
 from bot.event import Event
@@ -20,6 +19,8 @@ def confirm_vacation_cancellation_cb(
         callback_data_value: str = None
 ) -> None:
     logger.info(f"Confirm cancel vacation callback for {user_id}")
+    user_session.state_machine.to_confirm_vacation_cancellation()
+    user_session.save_session()
     # TODO: Add a request to cancel a vacation in the future
     # current_vacation = user_session.get_current_vacation()
 

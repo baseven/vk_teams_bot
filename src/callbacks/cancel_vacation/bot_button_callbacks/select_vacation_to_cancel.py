@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions import CancelVacationActions as Actions
+from src.actions.cancel_vacation import CancelVacationActions as Actions
 from src.utils import create_keyboard
 from src.sessions import UserSession
 
@@ -21,7 +21,7 @@ def select_vacation_to_cancel_cb(
 ) -> None:
     logger.info(f"Handling cancel planned vacation for user {user_id}")
 
-    user_session.state_machine.to_cancel_vacation()
+    user_session.state_machine.to_select_vacation_to_cancel()
     user_session.set_current_vacation(vacation_id=callback_data_value)
     user_session.save_session()
 

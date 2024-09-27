@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions import CancelVacationActions as Actions
+from src.actions.cancel_vacation import CancelVacationActions as Actions
 from src.data.vacation_schedule import vacation_schedule
 from src.sessions import UserSession
 from src.utils import create_keyboard, create_vacation_keyboard

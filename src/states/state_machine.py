@@ -4,16 +4,16 @@ from transitions import Machine
 
 from src.states.annual_vacation import AnnualVacation
 from src.states.main_menu import MainMenu
+from src.states.cancel_vacation import CancelVacation
 
 from src.states.reschedule_vacation import reschedule_vacation_states, reschedule_vacation_transitions
-from src.states.cancel_vacation import cancel_vacation_states, cancel_vacation_transitions
 
 logger = logging.getLogger(__name__)
 
-STATES = MainMenu.states + AnnualVacation.states
+STATES = MainMenu.states + AnnualVacation.states + CancelVacation.states
 logger.debug(f'States: {STATES}')
 
-TRANSITIONS = MainMenu.transitions + AnnualVacation.transitions
+TRANSITIONS = MainMenu.transitions + AnnualVacation.transitions + CancelVacation.transitions
 logger.debug(f'TRANSITIONS: {TRANSITIONS}')
 
 
