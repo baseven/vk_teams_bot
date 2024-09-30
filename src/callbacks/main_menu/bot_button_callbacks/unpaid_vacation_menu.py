@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions import BaseActions as Actions
+from src.actions.unpaid_vacation import UnpaidVacationActions as Actions
 from src.sessions import UserSession
 from src.utils import create_keyboard
 
@@ -20,7 +20,7 @@ def unpaid_vacation_menu_cb(
         callback_data_value: str = None
 ) -> None:
     logger.info(f"Unpaid vacation menu callback for user {user_id}")
-    user_session.state_machine.to_unpaid_vacation()
+    user_session.state_machine.to_unpaid_vacation_menu()
     user_session.save_session()
 
     actions = [
