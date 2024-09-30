@@ -5,15 +5,15 @@ from transitions import Machine
 from src.states.annual_vacation import AnnualVacation
 from src.states.main_menu import MainMenu
 from src.states.cancel_vacation import CancelVacation
-
-from src.states.reschedule_vacation import reschedule_vacation_states, reschedule_vacation_transitions
+from src.states.reschedule_vacation import RescheduleVacation
 
 logger = logging.getLogger(__name__)
 
-STATES = MainMenu.states + AnnualVacation.states + CancelVacation.states
+STATES = MainMenu.states + AnnualVacation.states + CancelVacation.states + RescheduleVacation.states
 logger.debug(f'States: {STATES}')
 
-TRANSITIONS = MainMenu.transitions + AnnualVacation.transitions + CancelVacation.transitions
+TRANSITIONS = (MainMenu.transitions + AnnualVacation.transitions + CancelVacation.transitions +
+               RescheduleVacation.transitions)
 logger.debug(f'TRANSITIONS: {TRANSITIONS}')
 
 

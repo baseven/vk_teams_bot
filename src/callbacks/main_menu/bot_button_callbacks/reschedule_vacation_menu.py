@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions import RescheduleVacationActions as Actions
+from src.actions.reschedule_vacation import RescheduleVacationActions as Actions
 from src.data.vacation_limits import vacation_limits_dict
 from src.data.vacation_schedule import vacation_schedule
 from src.models.vacation import VacationType
@@ -13,7 +13,7 @@ from src.utils import create_keyboard, create_vacation_keyboard
 logger = logging.getLogger(__name__)
 
 RESCHEDULE_VACATION_MENU_TEXT_TEMPLATE = (
-    "Вывожу запланированные отпуска. Можете выбрать один из них для редактирования. "
+    "Вывожу запланированные отпуска. Выберите отпуск, который вы хотите перенести. "
     "Доступно дней для оформления отпуска: {available_days}, но можно оформить и другое количество."
 )
 
@@ -36,18 +36,18 @@ def reschedule_vacation_menu_cb(
     # TODO: Add filter by vacation type
     vacation_keyboard = create_vacation_keyboard(
         planned_vacations=vacation_schedule,
-        callback_prefix=Actions.SELECT_VACATION_TO_RESCHEDULE.value
+        callback_prefix=Actions.CONFIRM_VACATION_SELECTION.callback_data
     )
 
     actions = [
         Actions.BACK_TO_MAIN_MENU
     ]
     actions_keyboard = create_keyboard(actions=actions)
-    reschedule_vacation_menu_keyboard = vacation_keyboard + actions_keyboard
+    bot_keyboard = vacation_keyboard + actions_keyboard
 
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
         text=reschedule_vacation_menu_text,
-        inline_keyboard_markup=json.dumps(reschedule_vacation_menu_keyboard)
+        inline_keyboard_markup=json.dumps(bot_keyboard)
     )

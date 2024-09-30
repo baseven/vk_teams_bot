@@ -3,14 +3,13 @@ import logging
 
 from bot.event import Event, EventType
 
-from src.actions import RescheduleVacationActions as Actions
-from src.models.vacation import VacationType
+from src.actions.reschedule_vacation import RescheduleVacationActions as Actions
 from src.sessions import UserSession
 from src.utils import create_keyboard, parse_vacation_dates
 
 logger = logging.getLogger(__name__)
 
-RESCHEDULE_VACATION_TEXT_TEMPLATE = "Вы точно хотите оформить отпуск на {period}?"
+RESCHEDULE_VACATION_TEXT_TEMPLATE = "Вы уверены, что хотите перенести отпуск на выбранные даты {period}?"
 
 
 def reschedule_vacation_cb(
@@ -23,7 +22,7 @@ def reschedule_vacation_cb(
     vacation_dates = event.data['text']
     start_date, end_date = parse_vacation_dates(vacation_dates)
     user_session.set_new_vacation_dates(start_date, end_date)
-    user_session.state_machine.to_confirm_reschedule_vacation()
+    user_session.state_machine.to_confirm_vacation_reschedule()
     user_session.save_session()
 
     actions = [
@@ -55,7 +54,7 @@ def reschedule_vacation_message_cb(bot, event: Event) -> None:
     logger.info(f"reschedule_vacation_message_cb for user: {user_id}, state: {state}")
 
     # TODO: The  state should be clearly defined and possibly linked to actions
-    if state != "entering_new_vacation_dates":
+    if state != Actions.ENTER_NEW_VACATION_DATES.callback_data:
         return
 
     logger.info(f"Event type: {event.type}")
