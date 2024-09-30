@@ -30,4 +30,4 @@ def message_dispatcher(bot, event: Event, message_callbacks: dict) -> None:
 
     if callback and event.type == EventType.NEW_MESSAGE:
         logger.info(f"Dispatching message handler for state: {state}")
-        callback(bot, user_session, user_id, event)
+        callback(bot, event)

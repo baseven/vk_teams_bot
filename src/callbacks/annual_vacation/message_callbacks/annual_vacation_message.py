@@ -61,7 +61,7 @@ def annual_vacation_message_cb(bot, event: Event) -> None:
     logger.info(f"annual_vacation_message_cb for user: {user_id}, state: {state}")
 
     # TODO: The create_annual_vacation state should be clearly defined and possibly linked to actions
-    if state != "create_annual_vacation":
+    if state != Actions.CREATE_ANNUAL_VACATION.callback_data:
         return
 
     logger.info(f"Event type: {event.type}")
