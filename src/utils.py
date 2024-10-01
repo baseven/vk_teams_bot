@@ -1,61 +1,65 @@
-from typing import List
+from typing import List, Dict, Any, Tuple
 from src.actions.bot_action import BotAction
-
 from src.models.vacation import Vacation, Limit
 from src.styles import ButtonStyle
 
 CALLBACK_DATA_SEPARATOR = '|'
 
 
-from enum import Enum
-
 def create_keyboard(
-        actions: List[BotAction],  # Общий тип для перечислений
-        button_style: ButtonStyle = ButtonStyle.PRIMARY
-) -> List[List[dict]]:
+    actions: List[BotAction],
+    button_style: ButtonStyle = ButtonStyle.PRIMARY
+) -> List[List[Dict[str, Any]]]:
     """
-    Создает клавиатуру на основе списка действий (actions) и стиля кнопки.
+    Create a keyboard layout based on a list of actions and a button style.
 
     Args:
-        actions (List[BotAction]): Список действий, для которых нужно создать кнопки.
-        button_style (ButtonStyle, optional): Стиль кнопки. По умолчанию PRIMARY.
+        actions (List[BotAction]): A list of actions to create buttons for.
+        button_style (ButtonStyle, optional): The style to apply to each button. Defaults to ButtonStyle.PRIMARY.
 
     Returns:
-        List[List[dict]]: Сгенерированная клавиатура.
+        List[List[Dict[str, Any]]]: A generated keyboard layout.
+
+    Raises:
+        ValueError: If the actions list is empty.
     """
+    if not actions:
+        raise ValueError("The 'actions' list cannot be empty.")
+
     return [
-        [{"text": action.text, "callbackData": action.callback_data, "style": button_style.value}]
+        [{
+            "text": action.text,
+            "callbackData": action.callback_data,
+            "style": button_style.value
+        }]
         for action in actions
     ]
 
 
-
 def create_vacation_keyboard(
-        planned_vacations: List['Vacation'],  # Assuming Vacation is a custom class
-        callback_prefix: str,
-        button_style: ButtonStyle = ButtonStyle.PRIMARY
-) -> list[list[dict[str, str]]]:
-    """Создает кнопки для плановых отпусков с указанным префиксом callback и стилем кнопки.
+    vacations: List[Vacation],
+    callback_prefix: str,
+    button_style: ButtonStyle = ButtonStyle.PRIMARY
+) -> List[List[Dict[str, str]]]:
+    """
+    Create buttons for vacations with the specified callback prefix and button style.
 
     Args:
-        planned_vacations (List[Vacation]): Список запланированных отпусков.
-        callback_prefix (str): Префикс для callback данных.
-        button_style (str): Стиль кнопки для интерфейса.
+        vacations (List[Vacation]): List of vacations.
+        callback_prefix (str): Prefix for callback data.
+        button_style (ButtonStyle, optional): Style of the button for the interface. Defaults to ButtonStyle.PRIMARY.
 
     Returns:
-        list[list[dict[str, str]]]: Список кнопок для интерфейса бота.
+        List[List[Dict[str, str]]]: List of buttons for the bot interface.
     """
     buttons = []
 
-    for idx, vacation in enumerate(planned_vacations, 1):
-        vacation_id = vacation.vacation_id
-        vacation_type = vacation.vacation_type
-        start_date = vacation.start_date.strftime('%d.%m.%Y')
-        end_date = vacation.end_date.strftime('%d.%m.%Y')
-        status = vacation.status  # Получаем статус отпуска
-
-        callback_data = f"{callback_prefix}{CALLBACK_DATA_SEPARATOR}{vacation_id}"
-        button_text = f"{idx}. {vacation_type}, с {start_date} по {end_date}, статус: {status}"
+    for idx, vacation in enumerate(vacations, 1):
+        callback_data = f"{callback_prefix}{CALLBACK_DATA_SEPARATOR}{vacation.vacation_id}"
+        button_text = (
+            f"{idx}. С {vacation.start_date.strftime('%d.%m.%Y')} по {vacation.end_date.strftime('%d.%m.%Y')}, "
+            f"тип: {vacation.vacation_type}, статус: {vacation.status}"
+        )
 
         button = {
             "text": button_text,
@@ -68,25 +72,34 @@ def create_vacation_keyboard(
     return buttons
 
 
-def parse_callback_data(callback_data: str) -> list[str] | tuple[str, str]:
+def parse_callback_data(callback_data: str) -> Tuple[str, str]:
     """
-    Разделяет callback_data на префикс и значение.
+    Split callback_data into prefix and value.
 
     Args:
-        callback_data (str): Строка callbackData, которую нужно разделить.
+        callback_data (str): The callbackData string to split.
 
     Returns:
-        tuple[str, str]: Префикс и значение, если разделитель найден, или (callback_data, "") если разделителя нет.
+        Tuple[str, str]: A tuple containing the prefix and value.
     """
     if CALLBACK_DATA_SEPARATOR in callback_data:
-        return callback_data.split(CALLBACK_DATA_SEPARATOR, 1)
+        prefix, value = callback_data.split(CALLBACK_DATA_SEPARATOR, 1)
+        return prefix, value
     return callback_data, ""
 
 
-# TODO: Refactor and check if needed
-def parse_vacation_dates(vacation_dates: str) -> tuple[str, str]:
-    start_date, end_date = vacation_dates.split('-')
-    return start_date.strip(), end_date.strip()
+def parse_vacation_dates(vacation_dates: str) -> Tuple[str, str]:
+    """
+    Parse the vacation dates string into start and end dates.
+
+    Args:
+        vacation_dates (str): String containing the vacation dates, separated by '-'.
+
+    Returns:
+        Tuple[str, str]: A tuple containing the start and end dates.
+    """
+    start_date, end_date = map(str.strip, vacation_dates.split('-'))
+    return start_date, end_date
 
 
 def format_limits_text(limits: list[Limit]) -> str:

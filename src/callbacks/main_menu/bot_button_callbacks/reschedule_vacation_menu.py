@@ -35,7 +35,7 @@ def reschedule_vacation_menu_cb(
 
     # TODO: Add filter by vacation type
     vacation_keyboard = create_vacation_keyboard(
-        planned_vacations=vacation_schedule,
+        vacations=vacation_schedule,
         callback_prefix=Actions.CONFIRM_VACATION_SELECTION.callback_data
     )
 
