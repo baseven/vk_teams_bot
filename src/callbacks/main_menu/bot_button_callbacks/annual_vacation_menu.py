@@ -4,8 +4,8 @@ import logging
 from bot.event import Event
 
 from src.actions.annual_vacation import AnnualVacationActions as Actions
-from src.data.vacation_limits import vacation_limits_dict
-from src.data.vacation_schedule import vacation_schedule
+from tests.data_fixtures.vacation_limits import vacation_limits_dict
+from tests.data_fixtures.vacation_schedule import vacation_schedule
 from src.models.vacation import VacationType
 from src.sessions import UserSession
 from src.utils import create_keyboard, create_vacation_keyboard

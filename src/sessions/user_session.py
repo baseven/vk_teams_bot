@@ -3,8 +3,8 @@ import logging
 from typing import Optional
 from datetime import datetime
 
-from src.data.vacation_limits import vacation_limits
-from src.data.vacation_schedule import vacation_schedule
+from tests.data_fixtures.vacation_limits import vacation_limits
+from tests.data_fixtures.vacation_schedule import vacation_schedule
 from src.models import UserData, Vacation, Limit, VacationType, VacationStatus
 from src.services import UserDataDatabaseService as DatabaseService
 from src.states import StateMachine
