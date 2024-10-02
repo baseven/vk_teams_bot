@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta
+
 import pytest
+
 from src.utils import (
     create_keyboard,
     create_vacation_keyboard,
     parse_callback_data,
-    parse_vacation_dates,
+    validate_vacation_dates,
     format_limits_text,
     format_vacations_text,
     CALLBACK_DATA_SEPARATOR
@@ -63,14 +66,54 @@ def test_parse_callback_data():
     assert prefix == "noprefix"
     assert value == ""
 
-def test_parse_vacation_dates():
+
+def test_valid_vacation_dates():
     """
-    Test the parse_vacation_dates function.
+    Test valid vacation dates in DD.MM.YYYY format, dynamically using future dates.
     """
-    vacation_dates = "01.01.2025 - 15.01.2025"
-    start_date, end_date = parse_vacation_dates(vacation_dates)
-    assert start_date == "01.01.2025"
-    assert end_date == "15.01.2025"
+    # Дата начала через 10 дней от текущей даты
+    start_date = (datetime.now() + timedelta(days=10)).strftime("%d.%m.%Y")
+    # Дата окончания через 15 дней от текущей даты
+    end_date = (datetime.now() + timedelta(days=15)).strftime("%d.%m.%Y")
+
+    # Формируем строку для тестирования
+    vacation_dates = f"{start_date} - {end_date}"
+
+    is_valid, dates = validate_vacation_dates(vacation_dates)
+    assert is_valid
+    assert dates == (start_date, end_date)
+
+def test_invalid_vacation_date_format():
+    """
+    Test invalid date format.
+    """
+    is_valid, error_message = validate_vacation_dates("2024/01/01 - 2024/01/15")
+    assert not is_valid
+    assert error_message == "Неверный формат даты или символы. Пожалуйста, используйте формат DD.MM.YYYY - DD.MM.YYYY."
+
+def test_single_date_error():
+    """
+    Test when only one date is provided.
+    """
+    is_valid, error_message = validate_vacation_dates("01.01.2024")
+    assert not is_valid
+    assert error_message == "Пожалуйста, укажите обе даты в формате DD.MM.YYYY - DD.MM.YYYY."
+
+def test_start_date_later_than_end_date():
+    """
+    Test when start date is later than the end date.
+    """
+    is_valid, error_message = validate_vacation_dates("15.01.2024 - 01.01.2024")
+    assert not is_valid
+    assert error_message == "Дата начала не может быть позже даты окончания."
+
+def test_vacation_dates_in_past():
+    """
+    Test when vacation dates are in the past.
+    """
+    is_valid, error_message = validate_vacation_dates("01.01.2020 - 15.01.2020")
+    assert not is_valid
+    assert error_message == "Дата не может быть в прошлом."
 
 def test_format_limits_text(sample_limits):
     """
