@@ -5,12 +5,13 @@ from bot.event import Event, EventType
 
 from src.actions.reschedule_vacation import RescheduleVacationActions as Actions
 from src.sessions import UserSession
-from src.utils import create_keyboard, parse_vacation_dates
+from src.utils import create_keyboard, validate_vacation_dates
 
 logger = logging.getLogger(__name__)
 
 RESCHEDULE_VACATION_TEXT_TEMPLATE = "Вы уверены, что хотите перенести отпуск на выбранные даты {period}?"
-
+CREATE_NEW_VACATION_TEXT = ("Пожалуйста, введите даты в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ, "
+                            "на которые вы хотите перенести отпуск")
 
 def reschedule_vacation_cb(
         bot,
@@ -18,9 +19,34 @@ def reschedule_vacation_cb(
         user_id: str,
         event: Event,
 ) -> None:
-    logger.info(f"Reschedule vacation callback for user {user_id}")
-    vacation_dates = event.data['text']
-    start_date, end_date = parse_vacation_dates(vacation_dates)
+    """
+    Handle the callback for rescheduling a vacation based on user-provided dates.
+
+    Args:
+        bot: The bot instance handling the message.
+        user_session (UserSession): The current user session.
+        user_id (str): The ID of the user.
+        event (Event): The event containing user input, particularly the dates.
+
+    Returns:
+        None: Sends a message to the user depending on validation results and updates the session state.
+    """
+    is_valid, result = validate_vacation_dates(event.data['text'])
+    if not is_valid:
+        bot.delete_messages(
+            chat_id=user_id,
+            msg_id=user_session.get_last_bot_message_id()
+        )
+        error_message = result + '\n' + CREATE_NEW_VACATION_TEXT
+        response = bot.send_text(
+            chat_id=user_id,
+            text=error_message,
+        )
+        user_session.set_last_bot_message_id(response.json().get('msgId'))
+        user_session.save_session()
+        return
+
+    start_date, end_date = result
     user_session.set_new_vacation_dates(start_date, end_date)
     user_session.state_machine.to_confirm_vacation_reschedule()
     user_session.save_session()

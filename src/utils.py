@@ -1,7 +1,12 @@
-from typing import List, Dict, Any, Tuple
+from datetime import datetime
+from typing import List, Dict, Any, Tuple, Union
+
 from src.actions.bot_action import BotAction
 from src.models.vacation import Vacation, Limit
 from src.styles import ButtonStyle
+
+
+DATE_FORMAT = "%d.%m.%Y"
 
 CALLBACK_DATA_SEPARATOR = '|'
 
@@ -88,18 +93,35 @@ def parse_callback_data(callback_data: str) -> Tuple[str, str]:
     return callback_data, ""
 
 
-def parse_vacation_dates(vacation_dates: str) -> Tuple[str, str]:
+def validate_vacation_dates(vacation_dates: str):
     """
-    Parse the vacation dates string into start and end dates.
+    Validate vacation dates provided in the format "DD.MM.YYYY - DD.MM.YYYY".
 
     Args:
-        vacation_dates (str): String containing the vacation dates, separated by '-'.
+        vacation_dates (str): A string containing the start and end dates in the format "DD.MM.YYYY - DD.MM.YYYY".
 
     Returns:
-        Tuple[str, str]: A tuple containing the start and end dates.
+        Tuple[bool, Union[str, Tuple[datetime, datetime]]]:
+            - (True, (start_date, end_date)): If validation is successful, returns a tuple with start and end datetime objects.
+            - (False, error_message): If validation fails, returns False and an error message explaining the issue.
     """
-    start_date, end_date = map(str.strip, vacation_dates.split('-'))
-    return start_date, end_date
+    try:
+        if "-" not in vacation_dates:
+            return False, "Пожалуйста, укажите обе даты в формате DD.MM.YYYY - DD.MM.YYYY."
+
+        start_date, end_date = vacation_dates.split('-')
+        start_date_obj = datetime.strptime(start_date.strip(), DATE_FORMAT)
+        end_date_obj = datetime.strptime(end_date.strip(), DATE_FORMAT)
+
+        if start_date_obj > end_date_obj:
+            return False, "Дата начала не может быть позже даты окончания."
+
+        if start_date_obj < datetime.now() or end_date_obj < datetime.now():
+            return False, "Дата не может быть в прошлом."
+
+        return True, (start_date_obj.strftime(DATE_FORMAT), end_date_obj.strftime(DATE_FORMAT))
+    except ValueError:
+        return False, "Неверный формат даты или символы. Пожалуйста, используйте формат DD.MM.YYYY - DD.MM.YYYY."
 
 
 def format_limits_text(limits: list[Limit]) -> str:
