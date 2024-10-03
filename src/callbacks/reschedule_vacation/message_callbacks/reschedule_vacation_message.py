@@ -7,6 +7,7 @@ from src.actions.reschedule_vacation import RescheduleVacationActions as Actions
 from src.sessions import UserSession
 from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
 from src.utils.keyboard_utils import create_keyboard
+from src.utils.text_utils import format_vacation_period
 
 logger = logging.getLogger(__name__)
 
@@ -74,8 +75,8 @@ def reschedule_vacation_cb(
         Actions.CONFIRM_VACATION_RESCHEDULE,
         Actions.BACK_TO_MAIN_MENU]
     reschedule_vacation_keyboard = create_keyboard(actions=actions)
-    reschedule_vacation_text = RESCHEDULE_VACATION_TEXT_TEMPLATE.format(
-        period=f"{start_date} - {end_date}")
+    vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
+    reschedule_vacation_text = RESCHEDULE_VACATION_TEXT_TEMPLATE.format(period=vacation_period)
 
     bot.delete_messages(
         chat_id=user_id,

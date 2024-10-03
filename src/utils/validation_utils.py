@@ -5,7 +5,7 @@ from src.constants import DATE_FORMAT
 from src.messages.error_messages import ErrorMessages
 from src.models import Vacation
 
-
+# TODO: Update tests and make one output format
 def validate_vacation_dates(vacation_dates: str):
     """
     Validate vacation dates provided in the format "DD.MM.YYYY - DD.MM.YYYY".
@@ -32,7 +32,7 @@ def validate_vacation_dates(vacation_dates: str):
         if start_date_obj < datetime.now() or end_date_obj < datetime.now():
             return False, ErrorMessages.PAST_DATE_ERROR
 
-        return True, (start_date_obj.strftime(DATE_FORMAT), end_date_obj.strftime(DATE_FORMAT))
+        return True, (start_date_obj, end_date_obj)
     except ValueError:
         return False, ErrorMessages.DATE_FORMAT_ERROR
 
@@ -42,17 +42,17 @@ def check_vacation_overlap(
     existing_vacations: List[Vacation]
 ) -> Tuple[bool, str]:
     """
-    Проверяет, пересекается ли новый отпуск с существующими отпусками.
+    Checks if a new vacation overlaps with existing vacations.
 
     Args:
-        new_start_date (datetime): Дата начала нового отпуска.
-        new_end_date (datetime): Дата окончания нового отпуска.
-        existing_vacations (List[Vacation]): Список существующих отпусков пользователя.
+        new_start_date (datetime): The start date of the new vacation.
+        new_end_date (datetime): The end date of the new vacation.
+        existing_vacations (List[Vacation]): A list of the user's existing vacations.
 
     Returns:
         Tuple[bool, str]:
-            - (True, ""): Если пересечений нет.
-            - (False, error_message): Если найдено пересечение, возвращает сообщение об ошибке.
+            - (True, ""): If there is no overlap.
+            - (False, error_message): If an overlap is found, returns an error message.
     """
     for vacation in existing_vacations:
         if new_start_date <= vacation.end_date and new_end_date >= vacation.start_date:

@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from src.constants import DATE_FORMAT
 from src.models import Limit, Vacation
 
 
@@ -35,8 +38,23 @@ def format_vacations_text(vacations: list[Vacation]) -> str:
 
     schedule_text = "График отпусков:\n" + "\n".join(
         [
-            f"Тип: {vacation.vacation_type}, с {vacation.start_date.strftime('%d.%m.%Y')} по {vacation.end_date.strftime('%d.%m.%Y')}, статус: {vacation.status}"
+            f"Тип: {vacation.vacation_type}, с {vacation.start_date.strftime(DATE_FORMAT)} "
+            f"по {vacation.end_date.strftime(DATE_FORMAT)}, статус: {vacation.status}"
             for vacation in vacations
         ]
     )
     return schedule_text
+
+# TODO: Add tests
+def format_vacation_period(start_date: datetime, end_date: datetime) -> str:
+    """
+    Formats the vacation period from datetime objects to a string in the format 'DD.MM.YYYY - DD.MM.YYYY'.
+
+    Args:
+        start_date (datetime): The start date of the vacation.
+        end_date (datetime): The end date of the vacation.
+
+    Returns:
+        str: The formatted vacation period string.
+    """
+    return f"{start_date.strftime(DATE_FORMAT)} - {end_date.strftime(DATE_FORMAT)}"

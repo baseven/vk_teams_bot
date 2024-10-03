@@ -1,6 +1,6 @@
 import logging
 
-from typing import Optional
+from typing import Optional, Tuple
 from datetime import datetime
 
 from tests.data_fixtures.vacation_limits import vacation_limits
@@ -84,8 +84,8 @@ class UserSession:
     def create_new_vacation(
             self,
             vacation_type: VacationType,
-            start_date: str,
-            end_date: str,
+            start_date: datetime,
+            end_date: datetime,
             status: VacationStatus = VacationStatus.PLANNED
     ) -> Vacation:
         """
@@ -93,25 +93,21 @@ class UserSession:
 
         Args:
             vacation_type (VacationType): The type of vacation.
-            start_date (str): Start date in 'DD.MM.YYYY' format.
-            end_date (str): End date in 'DD.MM.YYYY' format.
+            start_date (datetime): Start date.
+            end_date (datetime): End date.
             status (VacationStatus): The status of the vacation (default is PLANNED).
 
         Returns:
             Vacation: The newly created vacation.
         """
-        start_date_dt = datetime.strptime(start_date, "%d.%m.%Y")
-        end_date_dt = datetime.strptime(end_date, "%d.%m.%Y")
         new_vacation = Vacation(
             vacation_type=vacation_type,
-            start_date=start_date_dt,
-            end_date=end_date_dt,
+            start_date=start_date,
+            end_date=end_date,
             status=status
         )
         self.user_data.current_vacation = new_vacation
         self._set_current_limit(vacation_type)
-        logger.info(f"New vacation created for user {self.user_data.user_id}: "
-                    f"{start_date_dt.strftime('%d.%m.%Y')} - {end_date_dt.strftime('%d.%m.%Y')}")
         return new_vacation
 
     def _set_current_limit(self, vacation_type: VacationType) -> None:
@@ -161,21 +157,17 @@ class UserSession:
         """
         return self.user_data.current_vacation
 
-    def get_current_vacation_dates(self) -> Optional[tuple[str, str]]:
+    def get_current_vacation_dates(self) -> Optional[tuple[datetime, datetime]]:
         """
         Returns the dates of the current vacation as a tuple (start_date, end_date) in 'DD.MM.YYYY' format.
 
         Returns:
-            Optional[tuple[str, str]]: Tuple with the start and end dates of the current vacation,
+            Optional[tuple[datetime, datetime]]: Tuple with the start and end dates of the current vacation,
             or None if no current vacation is set.
         """
         if self.user_data.current_vacation:
-            start_date = self.user_data.current_vacation.start_date.strftime("%d.%m.%Y")
-            end_date = self.user_data.current_vacation.end_date.strftime("%d.%m.%Y")
-            logger.debug(f"Fetched vacation dates for user {self.user_data.user_id}: {start_date} - {end_date}")
-            return start_date, end_date
-
-        logger.warning(f"No current vacation set for user {self.user_data.user_id}")
+            return (self.user_data.current_vacation.start_date,
+                    self.user_data.current_vacation.end_date)
 
     def set_last_bot_message_id(self, message_id: str) -> None:
         """
@@ -206,39 +198,30 @@ class UserSession:
         self.user_data.current_limit = None
         logger.info(f"Current vacation and limit reset for user {self.user_data.user_id}")
 
-    def set_new_vacation_dates(self, start_date: str, end_date: str) -> None:
+    def set_new_vacation_dates(self, start_date: datetime, end_date: datetime) -> None:
         """
         Set new vacation dates for editing.
 
         Args:
-            start_date (str): Start date in 'DD.MM.YYYY' format.
-            end_date (str): End date in 'DD.MM.YYYY' format.
+            start_date (datetime): Start date.
+            end_date (datetime): End date.
 
         Raises:
             ValueError: If the start date is later than the end date.
         """
-        start_date_dt = datetime.strptime(start_date, "%d.%m.%Y")
-        end_date_dt = datetime.strptime(end_date, "%d.%m.%Y")
+        self.user_data.new_vacation_dates = (start_date, end_date)
 
-        self.user_data.new_vacation_dates = (start_date_dt, end_date_dt)
-        logger.info(f"New vacation dates set for user {self.user_data.user_id}: {start_date} - {end_date}")
-
-    def get_new_vacation_dates(self) -> Optional[tuple[str, str]]:
+    def get_new_vacation_dates(self) -> Optional[tuple[datetime, datetime]]:
         """
         Get the new vacation dates being edited as a tuple (start_date, end_date) in 'DD.MM.YYYY' format.
 
         Returns:
-            Optional[tuple[str, str]]: Tuple with the start and end dates in 'DD.MM.YYYY' format,
+            Optional[tuple[datetime, datetime]]: Tuple with the start and end dates,
             or None if no new vacation dates are set.
         """
         if self.user_data.new_vacation_dates:
             start_date, end_date = self.user_data.new_vacation_dates
-            logger.debug(
-                f"Fetched new vacation dates for user {self.user_data.user_id}: {start_date.strftime('%d.%m.%Y')} - {end_date.strftime('%d.%m.%Y')}")
-            return start_date.strftime("%d.%m.%Y"), end_date.strftime("%d.%m.%Y")
-
-        logger.warning(f"No new vacation dates set for user {self.user_data.user_id}")
-        return None
+            return start_date, end_date
 
     def get_vacations_and_limits(self) -> tuple[list[Vacation], list[Limit]]:
         """

@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from src.constants import DATE_FORMAT
-from src.utils.text_utils import format_limits_text, format_vacations_text
+from src.utils.text_utils import format_limits_text, format_vacations_text, format_vacation_period
 
 
 def test_format_limits_text(sample_limits):
@@ -39,3 +41,15 @@ def test_format_vacations_text_no_vacations():
     """
     text = format_vacations_text([])
     assert text == "График отпусков не найден."
+
+
+def test_format_vacation_period():
+    """
+    Test the formatting of vacation dates to a string.
+    """
+    start_date = datetime(2024, 10, 1)
+    end_date = datetime(2024, 10, 15)
+    expected = "01.10.2024 - 15.10.2024"
+
+    result = format_vacation_period(start_date, end_date)
+    assert result == expected

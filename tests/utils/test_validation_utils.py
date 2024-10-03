@@ -1,23 +1,24 @@
 from datetime import datetime, timedelta
 
 
-from src.constants import DATE_FORMAT
 from src.messages.error_messages import ErrorMessages
 from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
+from src.utils.text_utils import format_vacation_period
 
 
 def test_valid_vacation_dates():
     """
     Test valid vacation dates in DD.MM.YYYY format, dynamically using future dates.
     """
-    start_date = (datetime.now() + timedelta(days=10)).strftime(DATE_FORMAT)
-    end_date = (datetime.now() + timedelta(days=15)).strftime(DATE_FORMAT)
+    start_date = (datetime.today() + timedelta(days=10))
+    end_date = (datetime.today() + timedelta(days=15))
 
-    vacation_dates = f"{start_date} - {end_date}"
+    vacation_dates = format_vacation_period(start_date, end_date)
 
     is_valid, dates = validate_vacation_dates(vacation_dates)
     assert is_valid
-    assert dates == (start_date, end_date)
+    assert dates[0].date() == start_date.date()
+    assert dates[1].date() == end_date.date()
 
 
 def test_invalid_vacation_date_format():

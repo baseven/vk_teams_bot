@@ -6,6 +6,7 @@ from bot.event import Event
 from src.actions.cancel_vacation import CancelVacationActions as Actions
 from src.utils.keyboard_utils import create_keyboard
 from src.sessions import UserSession
+from src.utils.text_utils import format_vacation_period
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,8 @@ def select_vacation_to_cancel_cb(
     user_session.save_session()
 
     start_date, end_date = user_session.get_current_vacation_dates()
-    select_vacation_to_cancel_text = SELECT_VACATION_TO_CANCEL_TEXT_TEMPLATE.format(period=f"{start_date} - {end_date}")
+    vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
+    select_vacation_to_cancel_text = SELECT_VACATION_TO_CANCEL_TEXT_TEMPLATE.format(period=vacation_period)
 
     actions = [
         Actions.CONFIRM_VACATION_CANCELLATION,
