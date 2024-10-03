@@ -3,11 +3,10 @@ import logging
 
 from bot.event import Event, EventType
 
-from src.callbacks.annual_vacation.bot_button_callbacks import create_annual_vacation_cb
 from src.actions.annual_vacation import AnnualVacationActions as Actions
 from src.models.vacation import VacationType
 from src.sessions import UserSession
-from src.utils.validation_utils import validate_vacation_dates
+from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
 from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
@@ -51,6 +50,24 @@ def create_annual_vacation_from_dates_cb(
         return
 
     start_date, end_date = result
+    existing_vacations, _ = user_session.get_vacations_and_limits()
+    is_valid, result = check_vacation_overlap(new_start_date=start_date,
+                                                     new_end_date=end_date,
+                                                     existing_vacations=existing_vacations)
+    if not is_valid:
+        bot.delete_messages(
+            chat_id=user_id,
+            msg_id=user_session.get_last_bot_message_id()
+        )
+        error_message = result + '\n' + CREATE_ANNUAL_VACATION_TEXT
+        response = bot.send_text(
+            chat_id=user_id,
+            text=error_message,
+        )
+        user_session.set_last_bot_message_id(response.json().get('msgId'))
+        user_session.save_session()
+        return
+
     user_session.create_new_vacation(vacation_type=VacationType.ANNUAL_PAID,
                                      start_date=start_date,
                                      end_date=end_date)

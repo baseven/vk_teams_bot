@@ -5,7 +5,7 @@ from bot.event import Event, EventType
 
 from src.actions.reschedule_vacation import RescheduleVacationActions as Actions
 from src.sessions import UserSession
-from src.utils.validation_utils import validate_vacation_dates
+from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
 from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
@@ -48,6 +48,24 @@ def reschedule_vacation_cb(
         return
 
     start_date, end_date = result
+    existing_vacations, _ = user_session.get_vacations_and_limits()
+    is_valid, result = check_vacation_overlap(new_start_date=start_date,
+                                                     new_end_date=end_date,
+                                                     existing_vacations=existing_vacations)
+    if not is_valid:
+        bot.delete_messages(
+            chat_id=user_id,
+            msg_id=user_session.get_last_bot_message_id()
+        )
+        error_message = result + '\n' + CREATE_NEW_VACATION_TEXT
+        response = bot.send_text(
+            chat_id=user_id,
+            text=error_message,
+        )
+        user_session.set_last_bot_message_id(response.json().get('msgId'))
+        user_session.save_session()
+        return
+
     user_session.set_new_vacation_dates(start_date, end_date)
     user_session.state_machine.to_confirm_vacation_reschedule()
     user_session.save_session()
