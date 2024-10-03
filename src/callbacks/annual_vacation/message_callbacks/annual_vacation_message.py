@@ -7,7 +7,8 @@ from src.callbacks.annual_vacation.bot_button_callbacks import create_annual_vac
 from src.actions.annual_vacation import AnnualVacationActions as Actions
 from src.models.vacation import VacationType
 from src.sessions import UserSession
-from src.utils import create_keyboard, validate_vacation_dates
+from src.utils.validation_utils import validate_vacation_dates
+from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
 

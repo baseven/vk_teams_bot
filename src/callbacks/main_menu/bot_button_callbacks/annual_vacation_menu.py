@@ -8,7 +8,7 @@ from tests.data_fixtures.vacation_limits import vacation_limits_dict
 from tests.data_fixtures.vacation_schedule import vacation_schedule
 from src.models.vacation import VacationType
 from src.sessions import UserSession
-from src.utils import create_keyboard, create_vacation_keyboard
+from src.utils.keyboard_utils import create_keyboard, create_vacation_keyboard
 
 logger = logging.getLogger(__name__)
 

@@ -5,7 +5,8 @@ from bot.event import Event
 
 from src.actions.limits_and_vacations import LimitsAndVacationsActions as Actions
 from src.sessions import UserSession
-from src.utils import create_keyboard, format_limits_text, format_vacations_text
+from src.utils.text_utils import format_limits_text, format_vacations_text
+from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
 

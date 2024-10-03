@@ -5,7 +5,7 @@ from bot.event import Event
 
 from src.actions.main_menu import MainMenuActions as Actions
 from src.sessions import UserSession
-from src.utils import create_keyboard
+from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
 # TODO: Add main menu text through actions

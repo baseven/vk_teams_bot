@@ -5,7 +5,7 @@ from bot.event import Event
 
 from src.actions.reschedule_vacation import RescheduleVacationActions as Actions
 from src.sessions import UserSession
-from src.utils import create_keyboard
+from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
 

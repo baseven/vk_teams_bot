@@ -5,7 +5,7 @@ from bot.event import Event
 
 from src.actions.unpaid_vacation import UnpaidVacationActions as Actions
 from src.sessions import UserSession
-from src.utils import create_keyboard
+from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
 

@@ -1,0 +1,2 @@
+DATE_FORMAT = "%d.%m.%Y"
+CALLBACK_DATA_SEPARATOR = '|'

@@ -3,7 +3,7 @@ import logging
 from bot.event import Event, EventType
 
 from src.sessions import UserSession
-from src.utils import parse_callback_data
+from src.utils.callback_utils import parse_callback_data
 
 logger = logging.getLogger(__name__)
 

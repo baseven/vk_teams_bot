@@ -4,7 +4,7 @@ import logging
 from bot.event import Event
 
 from src.actions.cancel_vacation import CancelVacationActions as Actions
-from src.utils import create_keyboard
+from src.utils.keyboard_utils import create_keyboard
 from src.sessions import UserSession
 
 logger = logging.getLogger(__name__)
