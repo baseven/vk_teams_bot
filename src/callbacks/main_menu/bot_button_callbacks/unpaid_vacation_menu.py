@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions.unpaid_vacation import UnpaidVacationActions as Actions
+from src.buttons.unpaid_vacation import UnpaidVacationButtons as Buttons
 from src.sessions import UserSession
 from src.utils.keyboard_utils import create_keyboard
 
@@ -20,17 +20,18 @@ def unpaid_vacation_menu_cb(
         callback_data_value: str = None
 ) -> None:
     logger.info(f"Unpaid vacation menu callback for user {user_id}")
+
     user_session.state_machine.to_unpaid_vacation_menu()
     user_session.save_session()
 
-    actions = [
-        Actions.BACK_TO_MAIN_MENU
+    buttons = [
+        Buttons.BACK_TO_MAIN_MENU
     ]
-    actions_keyboard = create_keyboard(actions=actions)
+    keyboard = create_keyboard(buttons=buttons)
 
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
         text=UNPAID_VACATION_MENU_TEXT,
-        inline_keyboard_markup=json.dumps(actions_keyboard)
+        inline_keyboard_markup=json.dumps(keyboard)
     )

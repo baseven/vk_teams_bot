@@ -1,26 +1,26 @@
-from src.actions.bot_action import BotAction
+from src.buttons.bot_button import BotButton
 from src.states.main_menu import MainMenu
 
-class MainMenuActions:
-    """Действия, соответствующие кнопкам главного меню."""
+class MainMenuButtons:
+    """Buttons corresponding to the Main Menu buttons."""
 
-    ANNUAL_VACATION_MENU = BotAction(
+    ANNUAL_VACATION_MENU = BotButton(
         callback_data=MainMenu.annual_vacation_menu.name,
         text="Оформить ежегодный отпуск"
     )
-    UNPAID_VACATION_MENU = BotAction(
+    UNPAID_VACATION_MENU = BotButton(
         callback_data=MainMenu.unpaid_vacation_menu.name,
         text="Оформить отпуск без оплаты"
     )
-    LIMITS_AND_VACATIONS_MENU = BotAction(
+    LIMITS_AND_VACATIONS_MENU = BotButton(
         callback_data=MainMenu.limits_and_vacations_menu.name,
         text="Посмотреть лимиты и график отпусков"
     )
-    RESCHEDULE_VACATION_MENU = BotAction(
+    RESCHEDULE_VACATION_MENU = BotButton(
         callback_data=MainMenu.reschedule_vacation_menu.name,
         text="Перенести отпуск"
     )
-    CANCEL_VACATION_MENU = BotAction(
+    CANCEL_VACATION_MENU = BotButton(
         callback_data=MainMenu.cancel_vacation_menu.name,
         text="Отменить отпуск"
     )

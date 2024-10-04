@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions.reschedule_vacation import RescheduleVacationActions as Actions
+from src.buttons.reschedule_vacation import RescheduleVacationButtons as Buttons
 from src.sessions import UserSession
 from src.utils.keyboard_utils import create_keyboard
 from src.utils.text_utils import format_vacation_period
@@ -21,6 +21,7 @@ def confirm_vacation_selection_cb(
         callback_data_value: str = None
 ) -> None:
     logger.info(f"confirm_vacation_selection_cb {user_id}")
+
     user_session.state_machine.to_confirm_vacation_selection()
     user_session.set_current_vacation(vacation_id=callback_data_value)
     user_session.save_session()
@@ -28,14 +29,16 @@ def confirm_vacation_selection_cb(
     start_date, end_date = user_session.get_current_vacation_dates()
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
     bot_text = BOT_TEXT_TEMPLATE.format(period=vacation_period)
-    actions = [
-        Actions.ENTER_NEW_VACATION_DATES,
-        Actions.BACK_TO_MAIN_MENU
+
+    buttons = [
+        Buttons.ENTER_NEW_VACATION_DATES,
+        Buttons.BACK_TO_MAIN_MENU
     ]
-    bot_inline_keyboard = create_keyboard(actions=actions)
+    keyboard = create_keyboard(buttons=buttons)
+
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
         text=bot_text,
-        inline_keyboard_markup=json.dumps(bot_inline_keyboard)
+        inline_keyboard_markup=json.dumps(keyboard)
     )

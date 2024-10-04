@@ -1,7 +1,7 @@
 import pytest
 
 from src.constants import CALLBACK_DATA_SEPARATOR, DATE_FORMAT
-from src.styles import ButtonStyle
+from src.styles.button_style import ButtonStyle
 from src.utils.keyboard_utils import create_keyboard, create_vacation_keyboard
 
 
@@ -21,7 +21,7 @@ def test_create_keyboard(sample_actions):
 
 def test_create_keyboard_empty_actions():
     """
-    Test create_keyboard with empty actions list.
+    Test create_keyboard with empty buttons list.
     """
     with pytest.raises(ValueError):
         create_keyboard([])

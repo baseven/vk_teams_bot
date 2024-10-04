@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions.annual_vacation import AnnualVacationActions as Actions
+from src.buttons.annual_vacation import AnnualVacationButtons as Buttons
 from tests.data_fixtures.vacation_limits import vacation_limits_dict
 from tests.data_fixtures.vacation_schedule import vacation_schedule
 from src.models.vacation import VacationType
@@ -26,6 +26,7 @@ def annual_vacation_menu_cb(
         callback_data_value: str = None
 ) -> None:
     logger.info(f"Annual vacation menu callback for user {user_id}")
+
     user_session.state_machine.to_annual_vacation_menu()
     user_session.save_session()
 
@@ -36,19 +37,19 @@ def annual_vacation_menu_cb(
     # TODO: Add filter by vacation type
     vacation_keyboard = create_vacation_keyboard(
         vacations=vacation_schedule,
-        callback_prefix=Actions.HANDLE_ANNUAL_VACATION.callback_data
+        callback_prefix=Buttons.HANDLE_ANNUAL_VACATION.callback_data
     )
 
-    actions = [
-        Actions.CREATE_ANNUAL_VACATION,
-        Actions.BACK_TO_MAIN_MENU
+    buttons = [
+        Buttons.CREATE_ANNUAL_VACATION,
+        Buttons.BACK_TO_MAIN_MENU
     ]
-    actions_keyboard = create_keyboard(actions=actions)
-    annual_vacation_menu_keyboard = vacation_keyboard + actions_keyboard
+    actions_keyboard = create_keyboard(buttons=buttons)
+    keyboard = vacation_keyboard + actions_keyboard
 
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
         text=annual_vacation_text,
-        inline_keyboard_markup=json.dumps(annual_vacation_menu_keyboard)
+        inline_keyboard_markup=json.dumps(keyboard)
     )

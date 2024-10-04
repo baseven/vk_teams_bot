@@ -1,39 +1,34 @@
 from typing import List, Dict, Any
 
-from src.actions.bot_action import BotAction
+from src.buttons.bot_button import BotButton
 from src.constants import CALLBACK_DATA_SEPARATOR
 from src.models import Vacation
-from src.styles import ButtonStyle
-
+from src.styles.button_style import ButtonStyle
 
 
 def create_keyboard(
-    actions: List[BotAction],
-    button_style: ButtonStyle = ButtonStyle.PRIMARY
+    buttons: List[BotButton],
 ) -> List[List[Dict[str, Any]]]:
     """
-    Create a keyboard layout based on a list of actions and a button style.
-
+    Create a keyboard based on a list of buttons
     Args:
-        actions (List[BotAction]): A list of actions to create buttons for.
-        button_style (ButtonStyle, optional): The style to apply to each button. Defaults to ButtonStyle.PRIMARY.
-
+        buttons (List[BotButton]): A list of buttons to create a keyboard.
     Returns:
         List[List[Dict[str, Any]]]: A generated keyboard layout.
 
     Raises:
-        ValueError: If the actions list is empty.
+        ValueError: If the buttons list is empty.
     """
-    if not actions:
-        raise ValueError("The 'actions' list cannot be empty.")
+    if not buttons:
+        raise ValueError("The 'buttons' list cannot be empty.")
 
     return [
         [{
-            "text": action.text,
-            "callbackData": action.callback_data,
-            "style": button_style.value
+            "text": button.text,
+            "callbackData": button.callback_data,
+            "style": button.style
         }]
-        for action in actions
+        for button in buttons
     ]
 
 
@@ -43,7 +38,7 @@ def create_vacation_keyboard(
     button_style: ButtonStyle = ButtonStyle.PRIMARY
 ) -> List[List[Dict[str, str]]]:
     """
-    Create buttons for vacations with the specified callback prefix and button style.
+    Create a keyboard based on a list of buttons with the specified callback prefix and button style.
 
     Args:
         vacations (List[Vacation]): List of vacations.
@@ -53,7 +48,7 @@ def create_vacation_keyboard(
     Returns:
         List[List[Dict[str, str]]]: List of buttons for the bot interface.
     """
-    buttons = []
+    keyboard = []
 
     for idx, vacation in enumerate(vacations, 1):
         callback_data = f"{callback_prefix}{CALLBACK_DATA_SEPARATOR}{vacation.vacation_id}"
@@ -68,6 +63,6 @@ def create_vacation_keyboard(
             "style": button_style.value
         }
 
-        buttons.append([button])
+        keyboard.append([button])
 
-    return buttons
+    return keyboard

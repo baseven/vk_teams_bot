@@ -3,7 +3,7 @@ import logging
 
 from bot.event import Event
 
-from src.actions.cancel_vacation import CancelVacationActions as Actions
+from src.buttons.cancel_vacation import CancelVacationButtons as Buttons
 from src.utils.keyboard_utils import create_keyboard
 from src.sessions import UserSession
 from src.utils.text_utils import format_vacation_period
@@ -30,15 +30,15 @@ def select_vacation_to_cancel_cb(
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
     select_vacation_to_cancel_text = SELECT_VACATION_TO_CANCEL_TEXT_TEMPLATE.format(period=vacation_period)
 
-    actions = [
-        Actions.CONFIRM_VACATION_CANCELLATION,
-        Actions.BACK_TO_MAIN_MENU
+    buttons = [
+        Buttons.CONFIRM_VACATION_CANCELLATION,
+        Buttons.BACK_TO_MAIN_MENU
     ]
-    select_vacation_to_cancel_keyboard = create_keyboard(actions=actions)
+    keyboard = create_keyboard(buttons=buttons)
 
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
         text=select_vacation_to_cancel_text,
-        inline_keyboard_markup=json.dumps(select_vacation_to_cancel_keyboard)
+        inline_keyboard_markup=json.dumps(keyboard)
     )

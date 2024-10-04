@@ -1,5 +1,5 @@
 import pytest
-from src.actions.bot_action import BotAction
+from src.buttons.bot_button import BotButton
 from tests.data_fixtures.vacation_limits import vacation_limits
 from tests.data_fixtures.vacation_schedule import vacation_schedule
 
@@ -7,8 +7,8 @@ from tests.data_fixtures.vacation_schedule import vacation_schedule
 @pytest.fixture
 def sample_actions():
     return [
-        BotAction(text="Action 1", callback_data="callback1"),
-        BotAction(text="Action 2", callback_data="callback2")
+        BotButton(text="Action 1", callback_data="callback1"),
+        BotButton(text="Action 2", callback_data="callback2")
     ]
 
 @pytest.fixture
