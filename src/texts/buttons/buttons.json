@@ -1,0 +1,35 @@
+{
+  "common": {
+    "BACK_TO_MAIN_MENU": "Вернуться в главное меню"
+  },
+  "main_menu": {
+    "ANNUAL_VACATION_MENU": "Оформить ежегодный отпуск",
+    "UNPAID_VACATION_MENU": "Оформить отпуск без оплаты",
+    "LIMITS_AND_VACATIONS_MENU": "Посмотреть лимиты и график отпусков",
+    "RESCHEDULE_VACATION_MENU": "Перенести отпуск",
+    "CANCEL_VACATION_MENU": "Отменить отпуск"
+  },
+  "annual_vacation": {
+    "HANDLE_ANNUAL_VACATION": "",
+    "CREATE_ANNUAL_VACATION": "Другие даты",
+    "CONFIRM_ANNUAL_VACATION": "Оформить",
+    "BACK_TO_MAIN_MENU": "Вернуться в главное меню"
+  },
+  "cancel_vacation": {
+    "SELECT_VACATION_TO_CANCEL": "",
+    "CONFIRM_VACATION_CANCELLATION": "Удалить",
+    "BACK_TO_MAIN_MENU": "Вернуться в главное меню"
+  },
+  "reschedule_vacation": {
+    "CONFIRM_VACATION_SELECTION": "",
+    "ENTER_NEW_VACATION_DATES": "Да, я хочу перенести этот отпуск",
+    "CONFIRM_VACATION_RESCHEDULE": "Оформить",
+    "BACK_TO_MAIN_MENU": "Вернуться в главное меню"
+  },
+  "unpaid_vacation": {
+    "BACK_TO_MAIN_MENU": "Вернуться в главное меню"
+  },
+  "limits_and_vacations": {
+    "BACK_TO_MAIN_MENU": "Вернуться в главное меню"
+  }
+}

@@ -1,0 +1,5 @@
+{
+        "annual_vacation": {
+            "HANDLE_ANNUAL_VACATION": "Оформить отпуск с {start_date} по {end_date}?"
+        }
+    }
