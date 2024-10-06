@@ -3,7 +3,7 @@ import logging
 from bot.bot import Bot
 
 from config import VK_BOT_TOKEN
-from handlers.register_handlers import register_handlers  # Import from the handlers directory
+from src.handlers.register_handlers import register_handlers
 
 logging.basicConfig(
     level=logging.INFO,
