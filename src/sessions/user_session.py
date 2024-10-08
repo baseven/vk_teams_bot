@@ -3,8 +3,7 @@ import logging
 from typing import Optional, Tuple
 from datetime import datetime
 
-from tests.data_fixtures.vacation_limits import vacation_limits
-from tests.data_fixtures.vacation_schedule import vacation_schedule
+from src.temporary_data.vacations import limits, vacations
 from src.models import UserData, Vacation, Limit, VacationType, VacationStatus
 from src.services import UserDataDatabaseService as DatabaseService
 from src.states import StateMachine
@@ -68,10 +67,10 @@ class UserSession:
         Returns:
             UserData: A new user data object.
         """
-        #TODO:Currently, vacation limits and schedule are loaded from static data files.
+        #TODO: Currently, vacation limits and schedule are loaded from static data files.
         # In the future, this data will be fetched from the database.
-        vacations = vacation_schedule
-        limits = vacation_limits
+        # vacations =
+        # limits =
         new_user_data = UserData(
             user_id=user_id,
             vacations=vacations,
@@ -230,7 +229,5 @@ class UserSession:
         Returns:
             tuple[list[Vacation], list[Limit]]: A tuple containing the list of vacations and the list of limits.
         """
-        vacations = self.user_data.vacations
-        limits = self.user_data.limits
         logger.debug(f"Returning vacations and limits for user {self.user_data.user_id}")
-        return vacations, limits
+        return self.user_data.vacations, self.user_data.limits
