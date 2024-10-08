@@ -3,11 +3,9 @@ import logging
 from bot.event import Event, EventType
 
 from src.sessions import UserSession
+from src.texts.messages import messages
 
 logger = logging.getLogger(__name__)
-
-CREATE_NEW_VACATION_TEXT = ("Пожалуйста, введите даты в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ, "
-                            "на которые вы хотите перенести отпуск")
 
 
 # TODO: Rename, because there should be a correspondence between the state and the name of the function.
@@ -20,11 +18,12 @@ def enter_new_vacation_dates_cb(
         callback_data_value: str
 ) -> None:
     logger.info(f"Create annual vacation callback for {user_id}")
+
     user_session.state_machine.to_enter_new_vacation_dates()
     user_session.save_session()
 
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
-        text=CREATE_NEW_VACATION_TEXT
+        text=messages.reschedule_vacation.enter_new_vacation_dates
     )

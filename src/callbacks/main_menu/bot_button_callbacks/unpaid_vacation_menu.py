@@ -5,11 +5,10 @@ from bot.event import Event
 
 from src.buttons.unpaid_vacation import UnpaidVacationButtons as Buttons
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
-
-UNPAID_VACATION_MENU_TEXT = "UNPAID_VACATION_MENU"
 
 
 def unpaid_vacation_menu_cb(
@@ -32,6 +31,6 @@ def unpaid_vacation_menu_cb(
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
-        text=UNPAID_VACATION_MENU_TEXT,
+        text=messages.main_menu.unpaid_vacation_menu,
         inline_keyboard_markup=json.dumps(keyboard)
     )

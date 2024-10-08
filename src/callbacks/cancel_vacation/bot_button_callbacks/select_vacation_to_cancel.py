@@ -6,11 +6,10 @@ from bot.event import Event
 from src.buttons.cancel_vacation import CancelVacationButtons as Buttons
 from src.utils.keyboard_utils import create_keyboard
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.text_utils import format_vacation_period
 
 logger = logging.getLogger(__name__)
-
-SELECT_VACATION_TO_CANCEL_TEXT_TEMPLATE = "Удалить отпуск {period}?"
 
 
 def select_vacation_to_cancel_cb(
@@ -28,7 +27,7 @@ def select_vacation_to_cancel_cb(
 
     start_date, end_date = user_session.get_current_vacation_dates()
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
-    select_vacation_to_cancel_text = SELECT_VACATION_TO_CANCEL_TEXT_TEMPLATE.format(period=vacation_period)
+    message_text = messages.cancel_vacation.select_vacation_to_cancel.format(period=vacation_period)
 
     buttons = [
         Buttons.CONFIRM_VACATION_CANCELLATION,
@@ -39,6 +38,6 @@ def select_vacation_to_cancel_cb(
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
-        text=select_vacation_to_cancel_text,
+        text=message_text,
         inline_keyboard_markup=json.dumps(keyboard)
     )

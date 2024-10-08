@@ -5,11 +5,10 @@ from bot.event import Event
 
 from src.buttons.main_menu import MainMenuButtons as Buttons
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
-
-MAIN_MENU_TEXT = "Главное меню"
 
 
 def start_cb(bot, event: Event) -> None:
@@ -30,7 +29,7 @@ def start_cb(bot, event: Event) -> None:
 
     response = bot.send_text(
         chat_id=user_id,
-        text=MAIN_MENU_TEXT,
+        text=messages.commands.main_menu,
         inline_keyboard_markup=json.dumps(keyboard)
     )
 

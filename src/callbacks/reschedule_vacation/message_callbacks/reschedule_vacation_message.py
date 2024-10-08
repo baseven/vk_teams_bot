@@ -5,15 +5,13 @@ from bot.event import Event, EventType
 
 from src.buttons.reschedule_vacation import RescheduleVacationButtons as Buttons
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
 from src.utils.keyboard_utils import create_keyboard
 from src.utils.text_utils import format_vacation_period
 
 logger = logging.getLogger(__name__)
 
-RESCHEDULE_VACATION_TEXT_TEMPLATE = "Вы уверены, что хотите перенести отпуск на выбранные даты {period}?"
-CREATE_NEW_VACATION_TEXT = ("Пожалуйста, введите даты в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ, "
-                            "на которые вы хотите перенести отпуск")
 
 def reschedule_vacation_cb(
         bot,
@@ -39,7 +37,7 @@ def reschedule_vacation_cb(
             chat_id=user_id,
             msg_id=user_session.get_last_bot_message_id()
         )
-        error_message = result + '\n' + CREATE_NEW_VACATION_TEXT
+        error_message = result + '\n' + messages.reschedule_vacation.create_new_vacation
         response = bot.send_text(
             chat_id=user_id,
             text=error_message,
@@ -58,7 +56,7 @@ def reschedule_vacation_cb(
             chat_id=user_id,
             msg_id=user_session.get_last_bot_message_id()
         )
-        error_message = result + '\n' + CREATE_NEW_VACATION_TEXT
+        error_message = result + '\n' + messages.reschedule_vacation.create_new_vacation
         response = bot.send_text(
             chat_id=user_id,
             text=error_message,
@@ -72,7 +70,7 @@ def reschedule_vacation_cb(
     user_session.save_session()
 
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
-    reschedule_vacation_text = RESCHEDULE_VACATION_TEXT_TEMPLATE.format(period=vacation_period)
+    message_text = messages.reschedule_vacation.reschedule_vacation.format(period=vacation_period)
 
     buttons = [
         Buttons.CONFIRM_VACATION_RESCHEDULE,
@@ -86,7 +84,7 @@ def reschedule_vacation_cb(
 
     response = bot.send_text(
         chat_id=user_id,
-        text=reschedule_vacation_text,
+        text=message_text,
         inline_keyboard_markup=json.dumps(keyboard)
     )
 

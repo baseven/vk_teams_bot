@@ -1,5 +1,31 @@
 {
-        "annual_vacation": {
-            "HANDLE_ANNUAL_VACATION": "Оформить отпуск с {start_date} по {end_date}?"
-        }
-    }
+  "commands": {
+    "main_menu": "Главное меню"
+  },
+  "main_menu": {
+    "annual_vacation_menu": "Вывожу доступные плановые периоды. Можете выбрать один из них или выбрать другие даты. Доступно дней для оформления отпуска: {available_days}, но можно оформить и другое количество.",
+    "unpaid_vacation_menu": "Оформить отпуск без оплаты",
+    "LIMITS_AND_VACATIONS_MENU": "Посмотреть лимиты и график отпусков",
+    "reschedule_vacation_menu": "Вывожу отпуска. Выберите отпуск, который вы хотите перенести. Доступно дней для оформления отпуска: {available_days}, но можно оформить и другое количество.",
+    "cancel_vacation_menu": "Вывожу отпуска. Можете выбрать один из них для удаления."
+  },
+  "annual_vacation": {
+    "confirm_annual_vacation": "Оформление ежегодного отпуска {period} отправлено на согласование",
+    "create_annual_vacation": "Введите период. Пожалуйста, укажите период в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ",
+    "handle_annual_vacation": "Оформить отпуск на {period} или вы хотите немного изменить даты?",
+    "handle_annual_vacation_dates": "Вы точно хотите оформить отпуск на {period}?"
+  },
+  "reschedule_vacation": {
+    "reschedule_vacation": "Вы уверены, что хотите перенести отпуск на выбранные даты {period}?",
+    "create_new_vacation": "Пожалуйста, введите даты в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ, на которые вы хотите перенести отпуск",
+    "confirm_vacation_reschedule": "Перенесенный отпуск {period} отправлен на согласование",
+    "confirm_vacation_selection": "Вы действительно хотите перенести выбранный отпуск {period}?",
+    "enter_new_vacation_dates": "Пожалуйста, введите даты в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ, на которые вы хотите перенести отпуск"
+
+
+  },
+  "cancel_vacation": {
+    "confirm_vacation_cancellation": "Ежегодный отпуск {period} удален",
+    "select_vacation_to_cancel": "Удалить отпуск {period}?"
+  }
+}

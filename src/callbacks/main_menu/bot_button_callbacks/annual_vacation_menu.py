@@ -8,14 +8,10 @@ from tests.data_fixtures.vacation_limits import vacation_limits_dict
 from tests.data_fixtures.vacation_schedule import vacation_schedule
 from src.models.vacation import VacationType
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.keyboard_utils import create_keyboard, create_vacation_keyboard
 
 logger = logging.getLogger(__name__)
-
-ANNUAL_VACATION_MENU_TEXT_TEMPLATE = (
-    "Вывожу доступные плановые периоды. Можете выбрать один из них или выбрать другие даты. "
-    "Доступно дней для оформления отпуска: {available_days}, но можно оформить и другое количество."
-)
 
 
 def annual_vacation_menu_cb(
@@ -32,7 +28,7 @@ def annual_vacation_menu_cb(
 
     # TODO: Get vacation_limits from user_data
     available_days = vacation_limits_dict[VacationType.ANNUAL_PAID].available_days
-    annual_vacation_text = ANNUAL_VACATION_MENU_TEXT_TEMPLATE.format(available_days=available_days)
+    message_text = messages.main_menu.annual_vacation_menu.format(available_days=available_days)
 
     # TODO: Add filter by vacation type
     vacation_keyboard = create_vacation_keyboard(
@@ -50,6 +46,6 @@ def annual_vacation_menu_cb(
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
-        text=annual_vacation_text,
+        text=message_text,
         inline_keyboard_markup=json.dumps(keyboard)
     )

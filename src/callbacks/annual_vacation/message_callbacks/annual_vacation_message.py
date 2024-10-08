@@ -6,15 +6,12 @@ from bot.event import Event, EventType
 from src.buttons.annual_vacation import AnnualVacationButtons as Buttons
 from src.models.vacation import VacationType
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
 from src.utils.keyboard_utils import create_keyboard
 from src.utils.text_utils import format_vacation_period
 
 logger = logging.getLogger(__name__)
-
-
-HANDLE_ANNUAL_VACATION_DATES_TEXT_TEMPLATE = "Вы точно хотите оформить отпуск на {period}?"
-CREATE_ANNUAL_VACATION_TEXT = "Введите период. Пожалуйста, укажите период в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ"
 
 
 def create_annual_vacation_from_dates_cb(
@@ -41,7 +38,7 @@ def create_annual_vacation_from_dates_cb(
             chat_id=user_id,
             msg_id=user_session.get_last_bot_message_id()
         )
-        error_message = result + '\n' + CREATE_ANNUAL_VACATION_TEXT
+        error_message = result + '\n' + messages.annual_vacation.create_annual_vacation
         response = bot.send_text(
             chat_id=user_id,
             text=error_message,
@@ -60,7 +57,7 @@ def create_annual_vacation_from_dates_cb(
             chat_id=user_id,
             msg_id=user_session.get_last_bot_message_id()
         )
-        error_message = result + '\n' + CREATE_ANNUAL_VACATION_TEXT
+        error_message = result + '\n' + messages.annual_vacation.create_annual_vacation
         response = bot.send_text(
             chat_id=user_id,
             text=error_message,
@@ -76,7 +73,7 @@ def create_annual_vacation_from_dates_cb(
     user_session.save_session()
 
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
-    handle_annual_vacation_dates_text = HANDLE_ANNUAL_VACATION_DATES_TEXT_TEMPLATE.format(period=vacation_period)
+    message_text = messages.annual_vacation.handle_annual_vacation_dates.format(period=vacation_period)
 
     buttons = [
         Buttons.CONFIRM_ANNUAL_VACATION,
@@ -90,7 +87,7 @@ def create_annual_vacation_from_dates_cb(
     )
     response = bot.send_text(
         chat_id=user_id,
-        text=handle_annual_vacation_dates_text,
+        text=message_text,
         inline_keyboard_markup=json.dumps(keyboard)
     )
     logger.info(f"Response: {response.json()}")

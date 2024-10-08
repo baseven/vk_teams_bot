@@ -6,12 +6,10 @@ from bot.event import Event
 from src.buttons.cancel_vacation import CancelVacationButtons as Buttons
 from tests.data_fixtures.vacation_schedule import vacation_schedule
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.keyboard_utils import create_keyboard, create_vacation_keyboard
 
 logger = logging.getLogger(__name__)
-
-
-PLANNED_VACATION_TEXT = "Вывожу запланированные отпуска. Можете выбрать один из них для удаления."
 
 
 def cancel_vacation_menu_cb(
@@ -41,6 +39,6 @@ def cancel_vacation_menu_cb(
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
-        text=PLANNED_VACATION_TEXT,
+        text=messages.main_menu.cancel_vacation_menu,
         inline_keyboard_markup=json.dumps(keyboard)
     )

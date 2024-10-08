@@ -11,6 +11,7 @@ from src.utils.keyboard_utils import create_keyboard
 logger = logging.getLogger(__name__)
 
 
+#TODO: Should texts be generated from templates that will be stored in src/texts/messages/messages.json?
 def limits_and_vacations_menu_cb(
         bot,
         user_session: UserSession,

@@ -5,12 +5,11 @@ from bot.event import Event
 
 from src.buttons.annual_vacation import AnnualVacationButtons as Buttons
 from src.sessions import UserSession
+from src.texts.messages import messages
 from src.utils.keyboard_utils import create_keyboard
 from src.utils.text_utils import format_vacation_period
 
 logger = logging.getLogger(__name__)
-
-HANDLE_ANNUAL_VACATION_TEXT_TEMPLATE = "Оформить отпуск на {period} или вы хотите немного изменить даты?"
 
 
 def handle_annual_vacation_cb(
@@ -28,7 +27,7 @@ def handle_annual_vacation_cb(
 
     start_date, end_date = user_session.get_current_vacation_dates()
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
-    handle_annual_vacation_text = HANDLE_ANNUAL_VACATION_TEXT_TEMPLATE.format(period=vacation_period)
+    message_text = messages.anual_vacation.handle_annual_vacation.format(period=vacation_period)
 
     buttons = [
         Buttons.CONFIRM_ANNUAL_VACATION,
@@ -40,6 +39,6 @@ def handle_annual_vacation_cb(
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
-        text=handle_annual_vacation_text,
+        text=message_text,
         inline_keyboard_markup=json.dumps(keyboard)
     )

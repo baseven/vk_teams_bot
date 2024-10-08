@@ -3,10 +3,9 @@ import logging
 from bot.event import Event
 
 from src.sessions import UserSession
+from src.texts.messages import messages
 
 logger = logging.getLogger(__name__)
-
-CREATE_ANNUAL_VACATION_TEXT = "Введите период. Пожалуйста, укажите период в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ"
 
 
 def create_annual_vacation_cb(
@@ -23,5 +22,5 @@ def create_annual_vacation_cb(
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.get_last_bot_message_id(),
-        text=CREATE_ANNUAL_VACATION_TEXT
+        text=messages.annual_vacation.create_annual_vacation
     )
