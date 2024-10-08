@@ -14,12 +14,11 @@ from src.utils.keyboard_utils import create_keyboard, create_vacation_keyboard
 logger = logging.getLogger(__name__)
 
 
-def annual_vacation_menu_cb(
+def handle_annual_vacation_menu(
         bot,
         user_session: UserSession,
-        user_id: str,
-        event: Event,
-        callback_data_value: str = None
+        user_id: str, event: Event,
+        callback_data: str = None
 ) -> None:
     logger.info(f"Annual vacation menu callback for user {user_id}")
 

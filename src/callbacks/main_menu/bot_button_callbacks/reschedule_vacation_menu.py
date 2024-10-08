@@ -17,9 +17,8 @@ logger = logging.getLogger(__name__)
 def reschedule_vacation_menu_cb(
         bot,
         user_session: UserSession,
-        user_id: str,
-        event: Event,
-        callback_data_value: str = None
+        user_id: str, event: Event,
+        callback_data: str = None
 ) -> None:
     logger.info(f"Reschedule vacation menu callback for {user_id}")
 

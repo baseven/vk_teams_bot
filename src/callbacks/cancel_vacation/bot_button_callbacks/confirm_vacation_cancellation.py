@@ -15,7 +15,7 @@ def confirm_vacation_cancellation_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str = None
+        callback_data: str = None
 ) -> None:
     logger.info(f"Confirm cancel vacation callback for {user_id}")
     user_session.state_machine.to_confirm_vacation_cancellation()
@@ -31,4 +31,4 @@ def confirm_vacation_cancellation_cb(
         text=message_text,
         show_alert=False
     )
-    back_to_main_menu_cb(bot, user_session, user_id, event, callback_data_value)
+    back_to_main_menu_cb(bot, user_session, user_id, event, callback_data)

@@ -17,7 +17,7 @@ def limits_and_vacations_menu_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str = None
+        callback_data: str = None
 ) -> None:
     logger.info(f"View limits and vacations callback for user {user_id}")
 

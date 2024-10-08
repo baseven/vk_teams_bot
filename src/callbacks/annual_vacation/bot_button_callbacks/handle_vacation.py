@@ -17,12 +17,12 @@ def handle_annual_vacation_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str
+        callback_data: str
 ) -> None:
     logger.info(f"Handle annual vacation callback for {user_id}")
 
     user_session.state_machine.to_handle_annual_vacation()
-    user_session.set_current_vacation(vacation_id=callback_data_value)
+    user_session.set_current_vacation(vacation_id=callback_data)
     user_session.save_session()
 
     start_date, end_date = user_session.get_current_vacation_dates()

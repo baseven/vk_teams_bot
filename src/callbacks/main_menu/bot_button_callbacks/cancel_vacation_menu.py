@@ -12,13 +12,11 @@ from src.utils.keyboard_utils import create_keyboard, create_vacation_keyboard
 logger = logging.getLogger(__name__)
 
 
-def cancel_vacation_menu_cb(
+def handle_cancel_vacation_menu(
         bot,
         user_session: UserSession,
-        user_id: str,
-        event: Event,
-        callback_data_value: str = None
-) -> None:
+        user_id: str, event: Event,
+        callback_data: str = None) -> None:
     logger.info(f"Cancel vacation menu callback for user {user_id}")
 
     user_session.state_machine.to_cancel_vacation_menu()

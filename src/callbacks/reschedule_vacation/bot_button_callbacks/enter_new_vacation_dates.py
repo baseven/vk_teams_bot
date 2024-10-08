@@ -15,7 +15,7 @@ def enter_new_vacation_dates_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str
+        callback_data: str
 ) -> None:
     logger.info(f"Create annual vacation callback for {user_id}")
 

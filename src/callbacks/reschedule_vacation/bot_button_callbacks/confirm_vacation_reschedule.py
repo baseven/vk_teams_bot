@@ -16,7 +16,7 @@ def confirm_vacation_reschedule_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str
+        callback_data: str
 ) -> None:
     logger.info(f"Handling confirm change vacation for user {user_id}")
 
@@ -34,5 +34,5 @@ def confirm_vacation_reschedule_cb(
         show_alert=False
     )
 
-    back_to_main_menu_cb(bot, user_session, user_id, event, callback_data_value)
+    back_to_main_menu_cb(bot, user_session, user_id, event, callback_data)
 

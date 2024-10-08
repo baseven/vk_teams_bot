@@ -17,12 +17,12 @@ def select_vacation_to_cancel_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str = None
+        callback_data: str = None
 ) -> None:
     logger.info(f"Handling cancel planned vacation for user {user_id}")
 
     user_session.state_machine.to_select_vacation_to_cancel()
-    user_session.set_current_vacation(vacation_id=callback_data_value)
+    user_session.set_current_vacation(vacation_id=callback_data)
     user_session.save_session()
 
     start_date, end_date = user_session.get_current_vacation_dates()

@@ -15,7 +15,7 @@ def confirm_annual_vacation_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str
+        callback_data: str
 ) -> None:
     logger.info(f"Confirm annual vacation callback for {user_id}")
     user_session.state_machine.to_confirm_annual_vacation()
@@ -31,4 +31,4 @@ def confirm_annual_vacation_cb(
         text=message_text,
         show_alert=False
     )
-    back_to_main_menu_cb(bot, user_session, user_id, event, callback_data_value)
+    back_to_main_menu_cb(bot, user_session, user_id, event, callback_data)

@@ -13,7 +13,7 @@ def create_annual_vacation_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str
+        callback_data: str
 ) -> None:
     logger.info(f"Create annual vacation callback for {user_id}")
     user_session.state_machine.to_create_annual_vacation()

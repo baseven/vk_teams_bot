@@ -16,7 +16,7 @@ def unpaid_vacation_menu_cb(
         user_session: UserSession,
         user_id: str,
         event: Event,
-        callback_data_value: str = None
+        callback_data: str = None
 ) -> None:
     logger.info(f"Unpaid vacation menu callback for user {user_id}")
 
