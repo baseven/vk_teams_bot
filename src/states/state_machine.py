@@ -20,7 +20,7 @@ logger.debug(f'TRANSITIONS: {TRANSITIONS}')
 class StateMachine:
     """State machine for handling bot states and transitions."""
 
-    def __init__(self, initial_state: str = MainMenu.initial_state):
+    def __init__(self, initial_state: str):
         """Initialize the bot state machine."""
         self.state = initial_state
         self.machine = Machine(

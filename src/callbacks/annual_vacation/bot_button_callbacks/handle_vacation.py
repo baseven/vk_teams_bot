@@ -27,7 +27,7 @@ def handle_annual_vacation_cb(
 
     start_date, end_date = user_session.vacation_manager.get_current_vacation_dates()
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
-    message_text = messages.anual_vacation.handle_annual_vacation.format(period=vacation_period)
+    message_text = messages.annual_vacation.handle_annual_vacation.format(period=vacation_period)
 
     buttons = [
         Buttons.CONFIRM_ANNUAL_VACATION,

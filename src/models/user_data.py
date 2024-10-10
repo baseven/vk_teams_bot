@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import List, Optional
 
 from pydantic import Field
@@ -10,7 +9,7 @@ from src.states.main_menu import MainMenu
 
 class UserData(BaseModelConfig):
     user_id: str = Field(..., description="Unique identifier for the user")
-    state: str = Field(default=MainMenu.initial_state, description="Current state of the user in the bot")
+    state: str = Field(default=MainMenu.initial_state.value, description="Current state of the user in the bot")
     last_bot_message_id: Optional[str] = Field(None, description="ID of the last message_callbacks sent to the user")
     vacations: List[Vacation] = Field(default_factory=list, description="List of vacations associated with the user")
     limits: List[Limit] = Field(default_factory=list, description="List of current vacation limits for the user")

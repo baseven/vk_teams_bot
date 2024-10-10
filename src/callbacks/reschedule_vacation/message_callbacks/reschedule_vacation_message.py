@@ -68,7 +68,7 @@ def reschedule_vacation_cb(
         user_session.save_session()
         return
 
-    current_vacation = user_session.vacation_manager.current_vacation()
+    current_vacation = user_session.vacation_manager.current_vacation
     user_session.vacation_manager.create_new_vacation(
         vacation_type=current_vacation.vacation_type,
         start_date=start_date,

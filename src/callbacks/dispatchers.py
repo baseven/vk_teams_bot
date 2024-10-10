@@ -19,7 +19,7 @@ def callback_dispatcher(bot, event: Event, callbacks: dict) -> None:
     if callback:
         logger.info(f"Found callback for callback_data: {callback_data}")
         # TODO: callback_data is not correct name
-        callback(bor=bot, user_session=user_session, user_id=user_id, event=event, callback_data=callback_data_value)
+        callback(bot=bot, user_session=user_session, user_id=user_id, event=event, callback_data=callback_data_value)
 
 
 def message_dispatcher(bot, event: Event, message_callbacks: dict) -> None:
