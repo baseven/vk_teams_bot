@@ -20,7 +20,7 @@ def back_to_main_menu_cb(
 ) -> None:
     logger.info(f"Back to main menu callback for user {user_id}")
 
-    user_session.reset_current_vacation_and_limit()
+    user_session.vacation_manager.reset_vacation_state()
     user_session.state_machine.to_main_menu()
     user_session.save_session()
 
@@ -35,7 +35,7 @@ def back_to_main_menu_cb(
 
     bot.edit_text(
         chat_id=user_id,
-        msg_id=user_session.get_last_bot_message_id(),
+        msg_id=user_session.last_bot_message_id,
         text=messages.commands.main_menu,
         inline_keyboard_markup=json.dumps(keyboard)
     )

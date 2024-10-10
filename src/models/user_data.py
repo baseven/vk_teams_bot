@@ -16,4 +16,4 @@ class UserData(BaseModelConfig):
     limits: List[Limit] = Field(default_factory=list, description="List of current vacation limits for the user")
     current_vacation: Optional[Vacation] = Field(None, description="The current vacation being processed or edited")
     current_limit: Optional[Limit] = Field(None, description="The current vacation limit being processed or edited")
-    new_vacation_dates: Optional[tuple[datetime, datetime]] = Field(None, description="New proposed vacation dates")
+    new_vacation: Optional[Vacation] = Field(None, description="The new vacation")

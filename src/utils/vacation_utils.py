@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from src.constants import DATE_FORMAT
 from src.messages.error_messages import ErrorMessages
@@ -58,3 +58,8 @@ def check_vacation_overlap(
         if new_start_date <= vacation.end_date and new_end_date >= vacation.start_date:
             return False, ErrorMessages.OVERLAP_ERROR
     return True, ""
+
+
+def get_vacation_dates(vacation: Optional[Vacation]) -> Optional[Tuple[datetime, datetime]]:
+    if vacation:
+        return vacation.start_date, vacation.end_date

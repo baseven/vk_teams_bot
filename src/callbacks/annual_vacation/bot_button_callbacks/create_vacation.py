@@ -16,11 +16,12 @@ def create_annual_vacation_cb(
         callback_data: str
 ) -> None:
     logger.info(f"Create annual vacation callback for {user_id}")
+
     user_session.state_machine.to_create_annual_vacation()
     user_session.save_session()
 
     bot.edit_text(
         chat_id=user_id,
-        msg_id=user_session.get_last_bot_message_id(),
+        msg_id=user_session.last_bot_message_id,
         text=messages.annual_vacation.create_annual_vacation
     )

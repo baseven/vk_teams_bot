@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 
 from src.messages.error_messages import ErrorMessages
-from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
+from src.utils.vacation_utils import validate_vacation_dates, check_vacation_overlap
 from src.utils.text_utils import format_vacation_period
 
 

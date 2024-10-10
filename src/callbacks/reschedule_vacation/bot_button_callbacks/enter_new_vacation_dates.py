@@ -24,6 +24,6 @@ def enter_new_vacation_dates_cb(
 
     bot.edit_text(
         chat_id=user_id,
-        msg_id=user_session.get_last_bot_message_id(),
+        msg_id=user_session.last_bot_message_id,
         text=messages.reschedule_vacation.enter_new_vacation_dates
     )

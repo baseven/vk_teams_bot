@@ -21,11 +21,11 @@ def confirm_vacation_selection_cb(
 ) -> None:
     logger.info(f"confirm_vacation_selection_cb {user_id}")
 
+    user_session.vacation_manager.set_current_vacation_and_limit(vacation_id=callback_data)
     user_session.state_machine.to_confirm_vacation_selection()
-    user_session.set_current_vacation(vacation_id=callback_data)
     user_session.save_session()
 
-    start_date, end_date = user_session.get_current_vacation_dates()
+    start_date, end_date = user_session.vacation_manager.get_current_vacation_dates()
     vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
     message_text = messages.reschedule_vacation.confirm_vacation_selection.format(period=vacation_period)
 
@@ -37,7 +37,7 @@ def confirm_vacation_selection_cb(
 
     bot.edit_text(
         chat_id=user_id,
-        msg_id=user_session.get_last_bot_message_id(),
+        msg_id=user_session.last_bot_message_id,
         text=message_text,
         inline_keyboard_markup=json.dumps(keyboard)
     )

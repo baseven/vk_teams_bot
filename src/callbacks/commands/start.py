@@ -16,7 +16,7 @@ def start_cb(bot, event: Event) -> None:
 
     logger.info(f"Received /start command from user {user_id}")
 
-    user_session = UserSession.get_session(user_id)
+    user_session = UserSession(user_id)
 
     buttons = [
         Buttons.ANNUAL_VACATION_MENU,
@@ -33,6 +33,5 @@ def start_cb(bot, event: Event) -> None:
         inline_keyboard_markup=json.dumps(keyboard)
     )
 
-    last_bot_message_id = response.json().get('msgId')
-    user_session.set_last_bot_message_id(last_bot_message_id)
+    user_session.last_bot_message_id = response.json().get('msgId')
     user_session.save_session()

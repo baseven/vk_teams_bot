@@ -30,7 +30,7 @@ def unpaid_vacation_menu_cb(
 
     bot.edit_text(
         chat_id=user_id,
-        msg_id=user_session.get_last_bot_message_id(),
+        msg_id=user_session.last_bot_message_id,
         text=messages.main_menu.unpaid_vacation_menu,
         inline_keyboard_markup=json.dumps(keyboard)
     )

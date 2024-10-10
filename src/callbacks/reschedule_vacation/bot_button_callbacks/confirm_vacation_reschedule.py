@@ -20,14 +20,15 @@ def confirm_vacation_reschedule_cb(
 ) -> None:
     logger.info(f"Handling confirm change vacation for user {user_id}")
 
-    start_date, end_date = user_session.get_new_vacation_dates()
-    # TODO: How to determine the type of vacation?
-    user_session.create_new_vacation(vacation_type=VacationType.ANNUAL_PAID,
-                                     start_date=start_date,
-                                     end_date=end_date)
+    current_vacation_dates = user_session.vacation_manager.get_current_vacation_dates()
+    new_vacation_dates = user_session.vacation_manager.get_new_vacation_dates()
+    old_vacation_period = format_vacation_period(start_date=current_vacation_dates[0], end_date=current_vacation_dates[1])
+    new_vacation_period = format_vacation_period(start_date=new_vacation_dates[0], end_date=new_vacation_dates[1])
 
-    vacation_period = format_vacation_period(start_date=start_date, end_date=end_date)
-    message_text = messages.reschedule_vacation.confirm_vacation_reschedule.format(period=vacation_period)
+    message_text = messages.reschedule_vacation.confirm_vacation_reschedule.format(
+        old_period=old_vacation_period,
+        new_period=new_vacation_period)
+
     bot.answer_callback_query(
         query_id=event.data['queryId'],
         text=message_text,
@@ -35,4 +36,3 @@ def confirm_vacation_reschedule_cb(
     )
 
     back_to_main_menu_cb(bot, user_session, user_id, event, callback_data)
-

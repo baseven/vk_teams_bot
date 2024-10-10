@@ -6,7 +6,7 @@ from bot.event import Event, EventType
 from src.buttons.reschedule_vacation import RescheduleVacationButtons as Buttons
 from src.sessions import UserSession
 from src.texts.messages import messages
-from src.utils.validation_utils import validate_vacation_dates, check_vacation_overlap
+from src.utils.vacation_utils import validate_vacation_dates, check_vacation_overlap
 from src.utils.keyboard_utils import create_keyboard
 from src.utils.text_utils import format_vacation_period
 
@@ -35,37 +35,45 @@ def reschedule_vacation_cb(
     if not is_valid:
         bot.delete_messages(
             chat_id=user_id,
-            msg_id=user_session.get_last_bot_message_id()
+            msg_id=user_session.last_bot_message_id
         )
         error_message = result + '\n' + messages.reschedule_vacation.create_new_vacation
         response = bot.send_text(
             chat_id=user_id,
             text=error_message,
         )
-        user_session.set_last_bot_message_id(response.json().get('msgId'))
+        user_session.last_bot_message_id = response.json().get('msgId')
         user_session.save_session()
         return
 
     start_date, end_date = result
-    existing_vacations, _ = user_session.get_vacations_and_limits()
-    is_valid, result = check_vacation_overlap(new_start_date=start_date,
-                                                     new_end_date=end_date,
-                                                     existing_vacations=existing_vacations)
+    vacations = user_session.vacation_manager.vacations
+    is_valid, result = check_vacation_overlap(
+        new_start_date=start_date,
+        new_end_date=end_date,
+        existing_vacations=vacations
+    )
+
     if not is_valid:
         bot.delete_messages(
             chat_id=user_id,
-            msg_id=user_session.get_last_bot_message_id()
+            msg_id=user_session.last_bot_message_id
         )
         error_message = result + '\n' + messages.reschedule_vacation.create_new_vacation
         response = bot.send_text(
             chat_id=user_id,
             text=error_message,
         )
-        user_session.set_last_bot_message_id(response.json().get('msgId'))
+        user_session.last_bot_message_id = response.json().get('msgId')
         user_session.save_session()
         return
 
-    user_session.set_new_vacation_dates(start_date, end_date)
+    current_vacation = user_session.vacation_manager.current_vacation()
+    user_session.vacation_manager.create_new_vacation(
+        vacation_type=current_vacation.vacation_type,
+        start_date=start_date,
+        end_date=end_date
+    )
     user_session.state_machine.to_confirm_vacation_reschedule()
     user_session.save_session()
 
@@ -79,7 +87,7 @@ def reschedule_vacation_cb(
 
     bot.delete_messages(
         chat_id=user_id,
-        msg_id=user_session.get_last_bot_message_id()
+        msg_id=user_session.last_bot_message_id
     )
 
     response = bot.send_text(
@@ -89,15 +97,15 @@ def reschedule_vacation_cb(
     )
 
     logger.info(f"Response: {response.json()}")
-    user_session.set_last_bot_message_id(response.json().get('msgId'))
+    user_session.last_bot_message_id = response.json().get('msgId')
     user_session.save_session()
 
 
 def reschedule_vacation_message_cb(bot, event: Event) -> None:
     """Handles incoming messages related to rescheduling vacations."""
     user_id = event.from_chat
-    user_session = UserSession.get_session(user_id)
-    state = user_session.user_data.state
+    user_session = UserSession(user_id)
+    state = user_session.state
     logger.info(f"reschedule_vacation_message_cb for user: {user_id}, state: {state}")
 
     # TODO: The  state should be clearly defined and possibly linked to buttons
