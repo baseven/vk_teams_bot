@@ -4,8 +4,8 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
 
-from config import MONGO_URI, MONGO_DB, MONGO_USER_DATA_COLLECTION
-from models.user_data import UserData
+from src.config import MONGO_URI, MONGO_DB, MONGO_USER_DATA_COLLECTION
+from src.models.user_data import UserData
 
 
 class UserDataMongoService:

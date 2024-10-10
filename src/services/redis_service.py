@@ -4,8 +4,8 @@ from typing import Optional
 import redis
 from redis.client import StrictRedis
 
-from config import REDIS_HOST, REDIS_PORT, REDIS_DB
-from models.user_data import UserData
+from src.config import REDIS_HOST, REDIS_PORT, REDIS_DB
+from src.models.user_data import UserData
 
 logger = logging.getLogger(__name__)
 
