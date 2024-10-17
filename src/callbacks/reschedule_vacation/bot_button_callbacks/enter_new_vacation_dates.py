@@ -1,9 +1,12 @@
+import json
 import logging
 
-from bot.event import Event, EventType
+from bot.event import Event
 
+from src.buttons.reschedule_vacation import RescheduleVacationButtons as Buttons
 from src.sessions import UserSession
 from src.texts.messages import messages
+from src.utils.keyboard_utils import create_keyboard
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +25,14 @@ def enter_new_vacation_dates_cb(
     user_session.state_machine.to_enter_new_vacation_dates()
     user_session.save_session()
 
+    buttons = [
+        Buttons.BACK_TO_MAIN_MENU
+    ]
+    keyboard = create_keyboard(buttons=buttons)
+
     bot.edit_text(
         chat_id=user_id,
         msg_id=user_session.last_bot_message_id,
-        text=messages.reschedule_vacation.enter_new_vacation_dates
+        text=messages.reschedule_vacation.enter_new_vacation_dates,
+        inline_keyboard_markup=json.dumps(keyboard)
     )
