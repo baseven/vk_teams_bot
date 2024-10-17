@@ -11,6 +11,7 @@
   },
   "annual_vacation": {
     "confirm_annual_vacation": "Оформление ежегодного отпуска {period} отправлено на согласование",
+    "confirm_annual_vacation_reschedule": "Отпуск {old_period} изменен на отпуск {new_period} и отправлен на согласование",
     "create_annual_vacation": "Введите период. Пожалуйста, укажите период в формате ДД.ММ.ГГГГ - ДД.ММ.ГГГГ",
     "handle_annual_vacation": "Оформить отпуск на {period} или вы хотите немного изменить даты?",
     "handle_annual_vacation_dates": "Вы точно хотите оформить отпуск на {period}?"
